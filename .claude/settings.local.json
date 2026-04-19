@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(kill 67748)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(lsof -i :3000 -sTCP:LISTEN)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/posts)",
+      "Bash(curl -s -X POST http://localhost:3000/api/generate-post -H 'Content-Type: application/json' -d '{\"tema\":\"Como a IA está transformando pequenas empresas\",\"formato\":\"carrossel\"}' --max-time 30)",
+      "Bash(curl -s -X POST http://localhost:3000/api/claude -H 'Content-Type: application/json' -d '{\"tema\":\"Como a IA está transformando pequenas empresas\",\"formato\":\"carrossel\"}' --max-time 30)",
+      "WebFetch(domain:www.aexum.com.br)",
+      "Bash(npx tsc *)",
+      "Bash(git add *)",
+      "Bash(git init *)",
+      "Bash(git commit *)"
+    ]
+  }
+}
