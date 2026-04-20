@@ -47,6 +47,7 @@ type BrandRecord = {
     graphic_style: string
     recurring_elements: string
   }
+  assets?: { style_analysis?: string; reference_images?: string[] }
 }
 
 type Slide = {
@@ -100,6 +101,7 @@ export default function Posts() {
   const [savedBrands, setSavedBrands] = useState<BrandRecord[]>([])
   const [brandsLoading, setBrandsLoading] = useState(true)
   const [selectedBrandId, setSelectedBrandId] = useState<string | null>(null)
+  const [selectedBrandRecord, setSelectedBrandRecord] = useState<BrandRecord | null>(null)
   const [postId, setPostId] = useState<string | null>(null)
   const [postSaved, setPostSaved] = useState(false)
   const [slideUrls, setSlideUrls] = useState<string[]>([])
@@ -125,6 +127,7 @@ export default function Posts() {
   const handleBrandSelect = (id: string) => {
     setSelectedBrandId(id || null)
     const found = savedBrands.find(b => b.id === id)
+    setSelectedBrandRecord(found ?? null)
     if (!found) return
     setBrand({
       name: found.name,
@@ -190,7 +193,11 @@ PARÂMETROS:
 Gere ${slides} slide(s). Use APENAS as cores da paleta fornecida.
 ${params.visualStyle === 'Minimalista' ? 'Máximo 3 elementos por slide, muito espaço negativo.' : 'Use a paleta completa com camadas visuais.'}
 ${params.contentType === 'Educativo' ? 'Estruture em: problema → insight → solução.' : ''}
-Legenda: 150–300 caracteres. Hashtags: 15–20.`
+Legenda: 150–300 caracteres. Hashtags: 15–20.${selectedBrandRecord?.assets?.style_analysis ? `
+
+REFERÊNCIA DE ESTILO VISUAL (baseado em designs reais da marca):
+${selectedBrandRecord.assets.style_analysis}
+Use essas referências para orientar o layout e composição dos slides.` : ''}`
 
     try {
       const res = await fetch('/api/claude', {

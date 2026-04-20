@@ -32,8 +32,46 @@ export default function BrandsPage() {
   const [saving, setSaving] = useState(false)
   const [form, setForm] = useState(emptyForm)
   const [error, setError] = useState('')
+  const [uploading, setUploading] = useState<Record<string, boolean>>({})
+  const [analyzing, setAnalyzing] = useState<Record<string, boolean>>({})
+  const [toast, setToast] = useState<string | null>(null)
 
   useEffect(() => { fetchBrands() }, [])
+
+  function showToast(msg: string) {
+    setToast(msg)
+    setTimeout(() => setToast(null), 3000)
+  }
+
+  async function handleUpload(brand_id: string, file: File) {
+    if (file.size > 5 * 1024 * 1024) { showToast('Arquivo muito grande (máx 5MB)'); return }
+    setUploading(u => ({ ...u, [brand_id]: true }))
+    try {
+      const fd = new FormData()
+      fd.append('file', file)
+      const res = await fetch(`/api/brands/${brand_id}/upload-reference`, { method: 'POST', body: fd })
+      if (!res.ok) throw new Error((await res.json()).error)
+      await fetchBrands()
+      showToast('Imagem adicionada ✓')
+    } catch (e: any) {
+      showToast(`Erro: ${e.message}`)
+    } finally {
+      setUploading(u => ({ ...u, [brand_id]: false }))
+    }
+  }
+
+  async function handleAnalyze(brand_id: string) {
+    setAnalyzing(a => ({ ...a, [brand_id]: true }))
+    try {
+      const res = await fetch(`/api/brands/${brand_id}/analyze-references`, { method: 'POST' })
+      if (!res.ok) throw new Error((await res.json()).error)
+      showToast('Estilo analisado ✓')
+    } catch (e: any) {
+      showToast(`Erro: ${e.message}`)
+    } finally {
+      setAnalyzing(a => ({ ...a, [brand_id]: false }))
+    }
+  }
 
   async function fetchBrands() {
     setLoading(true)
@@ -188,6 +226,57 @@ export default function BrandsPage() {
                       </span>
                     )}
                   </div>
+
+                  {/* Referências Visuais */}
+                  <div style={{ marginTop: 16, borderTop: '1px solid var(--border)', paddingTop: 14 }}>
+                    <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 10 }}>
+                      Referências Visuais
+                    </div>
+
+                    {/* Thumbnails */}
+                    {((brand as any).assets?.reference_images ?? []).length > 0 && (
+                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10 }}>
+                        {((brand as any).assets.reference_images as string[]).map((url: string, i: number) => (
+                          <img key={i} src={url} alt={`ref-${i}`}
+                            style={{ width: 52, height: 52, objectFit: 'cover', borderRadius: 6, border: '1px solid var(--border2)' }} />
+                        ))}
+                      </div>
+                    )}
+
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <label style={{
+                        fontSize: 12, padding: '6px 12px', borderRadius: 6,
+                        border: '1px solid var(--border2)', color: 'var(--text-muted)',
+                        cursor: uploading[brand.id] ? 'wait' : 'pointer',
+                        fontFamily: 'var(--font-mono)', background: 'var(--surface2)',
+                        whiteSpace: 'nowrap',
+                      }}>
+                        {uploading[brand.id] ? 'Enviando…' : '＋ Adicionar referência'}
+                        <input
+                          type="file" accept="image/png,image/jpeg,image/webp"
+                          style={{ display: 'none' }}
+                          disabled={uploading[brand.id]}
+                          onChange={e => { const f = e.target.files?.[0]; if (f) handleUpload(brand.id, f); e.target.value = '' }}
+                        />
+                      </label>
+
+                      {((brand as any).assets?.reference_images ?? []).length > 0 && (
+                        <button
+                          onClick={() => handleAnalyze(brand.id)}
+                          disabled={analyzing[brand.id]}
+                          style={{
+                            fontSize: 12, padding: '6px 12px', borderRadius: 6,
+                            border: '1px solid var(--border2)', color: 'var(--text-muted)',
+                            cursor: analyzing[brand.id] ? 'wait' : 'pointer',
+                            fontFamily: 'var(--font-mono)', background: 'var(--surface2)',
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {analyzing[brand.id] ? 'Analisando…' : '🔍 Analisar estilo'}
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -195,6 +284,18 @@ export default function BrandsPage() {
 
         </div>
       </div>
+
+      {/* Toast */}
+      {toast && (
+        <div style={{
+          position: 'fixed', bottom: 24, right: 24, zIndex: 200,
+          background: '#1a2e1a', border: '1px solid #4ade80', color: '#4ade80',
+          borderRadius: 8, padding: '10px 16px', fontSize: 13,
+          fontFamily: 'var(--font-mono)',
+        }}>
+          {toast}
+        </div>
+      )}
 
       {/* Modal */}
       {showForm && (

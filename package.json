@@ -10,6 +10,8 @@
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.103.3",
+    "@types/busboy": "^1.5.4",
+    "busboy": "^1.6.0",
     "next": "^16.2.4",
     "react": "^18",
     "react-dom": "^18",
