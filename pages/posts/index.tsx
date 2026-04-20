@@ -38,6 +38,17 @@ type Brand = {
   recurringElements: string
 }
 
+type BrandRecord = {
+  id: string
+  name: string
+  visual: {
+    palette: { primary: string; secondary: string; accent: string; text: string }
+    typography: { display: string | null; body: string | null }
+    graphic_style: string
+    recurring_elements: string
+  }
+}
+
 type Slide = {
   numero: number
   headline: string
@@ -86,6 +97,8 @@ export default function Posts() {
   const [copied, setCopied] = useState('')
   const [currentSlide, setCurrentSlide] = useState(0)
   const [brandOpen, setBrandOpen] = useState(true)
+  const [savedBrands, setSavedBrands] = useState<BrandRecord[]>([])
+  const [brandsLoading, setBrandsLoading] = useState(true)
 
   useEffect(() => {
     try {
@@ -97,6 +110,29 @@ export default function Posts() {
   useEffect(() => {
     try { sessionStorage.setItem('aexum-brand', JSON.stringify(brand)) } catch {}
   }, [brand])
+
+  useEffect(() => {
+    fetch('/api/brands')
+      .then(r => r.json())
+      .then(data => { setSavedBrands(Array.isArray(data) ? data : []); setBrandsLoading(false) })
+      .catch(() => setBrandsLoading(false))
+  }, [])
+
+  const handleBrandSelect = (id: string) => {
+    const found = savedBrands.find(b => b.id === id)
+    if (!found) return
+    setBrand({
+      name: found.name,
+      colorPrimary: found.visual.palette.primary,
+      colorSecondary: found.visual.palette.secondary,
+      colorAccent: found.visual.palette.accent,
+      colorText: found.visual.palette.text,
+      fontDisplay: found.visual.typography.display ?? brand.fontDisplay,
+      fontBody: found.visual.typography.body ?? brand.fontBody,
+      graphicStyle: found.visual.graphic_style,
+      recurringElements: found.visual.recurring_elements,
+    })
+  }
 
   const copyText = (text: string, key: string) => {
     navigator.clipboard.writeText(text)
@@ -274,6 +310,41 @@ Legenda: 150–300 caracteres. Hashtags: 15–20.`
           <div style={{ display: 'grid', gridTemplateColumns: '360px 1fr', gap: '24px', alignItems: 'start' }}>
             {/* COLUNA ESQUERDA */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+
+              {/* Brand Selector */}
+              <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '10px', padding: '16px' }}>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'flex-end' }}>
+                  <div style={{ flex: 1 }}>
+                    <label style={labelStyle}>Brand</label>
+                    <select
+                      disabled={brandsLoading}
+                      onChange={e => handleBrandSelect(e.target.value)}
+                      style={{
+                        width: '100%', padding: '10px 12px',
+                        border: '1px solid #2a2a3e', borderRadius: '8px',
+                        fontSize: '13px', background: '#0f0f1a',
+                        color: 'white', outline: 'none',
+                        cursor: brandsLoading ? 'wait' : 'pointer',
+                        fontFamily: 'var(--font-body)',
+                      }}
+                    >
+                      <option value="">{brandsLoading ? 'Carregando brands...' : '— selecione uma brand —'}</option>
+                      {savedBrands.map(b => <option key={b.id} value={b.id}>{b.name}</option>)}
+                    </select>
+                  </div>
+                  <a href="/brands" target="_blank" rel="noopener noreferrer" style={{
+                    padding: '10px 12px', border: '1px solid #2a2a3e', borderRadius: '8px',
+                    fontSize: '13px', background: '#0f0f1a', color: 'var(--text-muted)',
+                    whiteSpace: 'nowrap', cursor: 'pointer', textDecoration: 'none',
+                  }}>＋ Nova brand</a>
+                </div>
+                {!brandsLoading && savedBrands.length === 0 && (
+                  <div style={{ marginTop: '8px', fontSize: '11px', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                    Nenhuma brand cadastrada. Crie uma em{' '}
+                    <a href="/brands" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none' }}>/brands</a>
+                  </div>
+                )}
+              </div>
 
               {/* Identidade Visual */}
               <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '10px', overflow: 'hidden' }}>
