@@ -105,6 +105,9 @@ export default function Posts() {
   const [postId, setPostId] = useState<string | null>(null)
   const [postSaved, setPostSaved] = useState(false)
   const [slideUrls, setSlideUrls] = useState<string[]>([])
+  const [scheduledAt, setScheduledAt] = useState('')
+  const [scheduling, setScheduling] = useState(false)
+  const [postStatus, setPostStatus] = useState<string | null>(null)
 
   useEffect(() => {
     try {
@@ -162,6 +165,24 @@ export default function Posts() {
     return `/api/render-slide?${p}`
   }
 
+  const handleSchedule = async () => {
+    if (!postId || !scheduledAt) return
+    setScheduling(true)
+    try {
+      const res = await fetch(`/api/posts/${postId}/schedule`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scheduled_at: new Date(scheduledAt).toISOString() }),
+      })
+      if (res.ok) setPostStatus('scheduled')
+      else console.error('[schedule]', await res.json())
+    } catch (e) {
+      console.error('[schedule]', e)
+    } finally {
+      setScheduling(false)
+    }
+  }
+
   const formatMap: Record<string, 'single' | 'carousel' | 'story' | 'reel'> = {
     'Post único': 'single', 'Carrossel': 'carousel', 'Story': 'story',
   }
@@ -172,7 +193,7 @@ export default function Posts() {
 
   const generate = async () => {
     if (!params.theme.trim()) { setError('Informe o tema do post'); return }
-    setError(''); setLoading(true); setOutput(null); setCurrentSlide(0); setPostSaved(false); setPostId(null); setSlideUrls([])
+    setError(''); setLoading(true); setOutput(null); setCurrentSlide(0); setPostSaved(false); setPostId(null); setSlideUrls([]); setPostStatus(null); setScheduledAt('')
 
     const slides = params.format === 'Carrossel' ? params.slideCount : 1
 
@@ -633,9 +654,42 @@ Use essas referências para orientar o layout e composição dos slides.` : ''}`
                   </div>
 
                   {postSaved && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontFamily: 'var(--font-mono)', color: '#4ade80' }}>
-                      <span>💾</span>
-                      <span>Salvo no Supabase{postId ? ` · ${postId.slice(0, 8)}…` : ''}</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: postStatus === 'scheduled' ? '#06b6d4' : '#4ade80' }}>
+                          {postStatus === 'scheduled' ? `📅 Agendado · ${postId?.slice(0, 8)}…` : `💾 Salvo · ${postId?.slice(0, 8)}…`}
+                        </span>
+                        <a href="/posts/history" style={{ fontSize: '11px', fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', textDecoration: 'none' }}>
+                          ver histórico →
+                        </a>
+                      </div>
+                      {postStatus !== 'scheduled' && (
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                          <input
+                            type="datetime-local"
+                            value={scheduledAt}
+                            onChange={e => setScheduledAt(e.target.value)}
+                            style={{
+                              padding: '8px 10px', borderRadius: '6px', fontSize: '12px',
+                              background: 'var(--surface2)', border: '1px solid var(--border2)',
+                              color: 'var(--text)', fontFamily: 'var(--font-mono)', outline: 'none',
+                            }}
+                          />
+                          <button
+                            onClick={handleSchedule}
+                            disabled={!scheduledAt || scheduling}
+                            style={{
+                              padding: '8px 14px', borderRadius: '6px', fontSize: '12px',
+                              background: !scheduledAt || scheduling ? 'var(--border2)' : '#06b6d4',
+                              color: !scheduledAt || scheduling ? 'var(--text-muted)' : '#0e0e0e',
+                              border: 'none', cursor: !scheduledAt || scheduling ? 'not-allowed' : 'pointer',
+                              fontFamily: 'var(--font-mono)', fontWeight: 600, whiteSpace: 'nowrap',
+                            }}
+                          >
+                            {scheduling ? 'Agendando…' : '📅 Agendar'}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
 
