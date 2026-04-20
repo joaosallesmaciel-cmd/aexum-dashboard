@@ -12,6 +12,9 @@ export type PostInput = {
 }
 
 export async function createPost(input: PostInput) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('Supabase env vars não configuradas (NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)')
+  }
   const supabase = createAdminSupabaseClient()
   const { brand_id, ...rest } = input
   const { data, error } = await supabase
