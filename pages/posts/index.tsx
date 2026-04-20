@@ -99,6 +99,9 @@ export default function Posts() {
   const [brandOpen, setBrandOpen] = useState(true)
   const [savedBrands, setSavedBrands] = useState<BrandRecord[]>([])
   const [brandsLoading, setBrandsLoading] = useState(true)
+  const [selectedBrandId, setSelectedBrandId] = useState<string | null>(null)
+  const [postId, setPostId] = useState<string | null>(null)
+  const [postSaved, setPostSaved] = useState(false)
 
   useEffect(() => {
     try {
@@ -119,6 +122,7 @@ export default function Posts() {
   }, [])
 
   const handleBrandSelect = (id: string) => {
+    setSelectedBrandId(id || null)
     const found = savedBrands.find(b => b.id === id)
     if (!found) return
     setBrand({
@@ -140,9 +144,17 @@ export default function Posts() {
     setTimeout(() => setCopied(''), 2000)
   }
 
+  const formatMap: Record<string, 'single' | 'carousel' | 'story' | 'reel'> = {
+    'Post único': 'single', 'Carrossel': 'carousel', 'Story': 'story',
+  }
+  const postTypeMap: Record<string, 'educational' | 'entertainment' | 'promotional' | 'behind_scenes' | 'engagement'> = {
+    'Educativo': 'educational', 'Entretenimento': 'entertainment', 'Promocional': 'promotional',
+    'Bastidores': 'behind_scenes', 'Engajamento': 'engagement',
+  }
+
   const generate = async () => {
     if (!params.theme.trim()) { setError('Informe o tema do post'); return }
-    setError(''); setLoading(true); setOutput(null); setCurrentSlide(0)
+    setError(''); setLoading(true); setOutput(null); setCurrentSlide(0); setPostSaved(false); setPostId(null)
 
     const slides = params.format === 'Carrossel' ? params.slideCount : 1
 
@@ -194,7 +206,27 @@ Legenda: 150–300 caracteres. Hashtags: 15–20.`
         .trim()
 
       const cleaned = text.replace(/```json|```/g, '').trim()
-      setOutput(JSON.parse(cleaned))
+      const parsed = JSON.parse(cleaned)
+      setOutput(parsed)
+
+      // Salvar no Supabase
+      try {
+        const saveRes = await fetch('/api/posts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...(selectedBrandId ? { brand_id: selectedBrandId } : {}),
+            format: formatMap[params.format] ?? 'single',
+            post_type: postTypeMap[params.contentType] ?? 'educational',
+            brief: { theme: params.theme, tone: params.voice, style: params.visualStyle },
+            strategy: { angle: parsed.angulo },
+            copy_variants: [parsed],
+            status: 'ready_for_review',
+          }),
+        })
+        const saved = await saveRes.json()
+        if (saveRes.ok && saved.id) { setPostId(saved.id); setPostSaved(true) }
+      } catch {}
     } catch (e) {
       console.error(e)
       setError('Erro ao gerar. Verifique a API key nas variáveis de ambiente do Vercel.')
@@ -563,6 +595,13 @@ Legenda: 150–300 caracteres. Hashtags: 15–20.`
                       {output.angulo}
                     </div>
                   </div>
+
+                  {postSaved && (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', fontFamily: 'var(--font-mono)', color: '#4ade80' }}>
+                      <span>💾</span>
+                      <span>Salvo no Supabase{postId ? ` · ${postId.slice(0, 8)}…` : ''}</span>
+                    </div>
+                  )}
 
                   {/* Preview + Briefing */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
