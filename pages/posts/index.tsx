@@ -215,18 +215,23 @@ Legenda: 150–300 caracteres. Hashtags: 15–20.`
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            ...(selectedBrandId ? { brand_id: selectedBrandId } : {}),
+            brand_id: selectedBrandId ?? null,
             format: formatMap[params.format] ?? 'single',
             post_type: postTypeMap[params.contentType] ?? 'educational',
             brief: { theme: params.theme, tone: params.voice, style: params.visualStyle },
             strategy: { angle: parsed.angulo },
             copy_variants: [parsed],
-            status: 'ready_for_review',
           }),
         })
         const saved = await saveRes.json()
-        if (saveRes.ok && saved.id) { setPostId(saved.id); setPostSaved(true) }
-      } catch {}
+        if (saveRes.ok && saved.id) {
+          setPostId(saved.id); setPostSaved(true)
+        } else {
+          console.error('[posts] save error:', saved)
+        }
+      } catch (saveErr) {
+        console.error('[posts] save exception:', saveErr)
+      }
     } catch (e) {
       console.error(e)
       setError('Erro ao gerar. Verifique a API key nas variáveis de ambiente do Vercel.')

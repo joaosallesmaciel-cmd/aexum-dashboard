@@ -13,9 +13,15 @@ export type PostInput = {
 
 export async function createPost(input: PostInput) {
   const supabase = createAdminSupabaseClient()
+  const { brand_id, ...rest } = input
   const { data, error } = await supabase
     .from('posts')
-    .insert({ owner_id: OWNER_ID, status: 'generating', ...input })
+    .insert({
+      owner_id: OWNER_ID,
+      status: 'ready_for_review',
+      ...(brand_id ? { brand_id } : {}),
+      ...rest,
+    })
     .select()
     .single()
 
