@@ -102,6 +102,7 @@ export default function Posts() {
   const [selectedBrandId, setSelectedBrandId] = useState<string | null>(null)
   const [postId, setPostId] = useState<string | null>(null)
   const [postSaved, setPostSaved] = useState(false)
+  const [slideUrls, setSlideUrls] = useState<string[]>([])
 
   useEffect(() => {
     try {
@@ -144,6 +145,20 @@ export default function Posts() {
     setTimeout(() => setCopied(''), 2000)
   }
 
+  const buildRenderUrl = (slide: Slide) => {
+    const p = new URLSearchParams({
+      bg:       slide.cor_fundo              || brand.colorPrimary,
+      tc:       slide.cor_texto_principal    || brand.colorText,
+      ac:       brand.colorSecondary,
+      headline: slide.headline,
+      corpo:    slide.corpo,
+      brand:    brand.name,
+      num:      String(slide.numero),
+      total:    String(output?.slides.length ?? 1),
+    })
+    return `/api/render-slide?${p}`
+  }
+
   const formatMap: Record<string, 'single' | 'carousel' | 'story' | 'reel'> = {
     'Post único': 'single', 'Carrossel': 'carousel', 'Story': 'story',
   }
@@ -154,7 +169,7 @@ export default function Posts() {
 
   const generate = async () => {
     if (!params.theme.trim()) { setError('Informe o tema do post'); return }
-    setError(''); setLoading(true); setOutput(null); setCurrentSlide(0); setPostSaved(false); setPostId(null)
+    setError(''); setLoading(true); setOutput(null); setCurrentSlide(0); setPostSaved(false); setPostId(null); setSlideUrls([])
 
     const slides = params.format === 'Carrossel' ? params.slideCount : 1
 
@@ -226,6 +241,15 @@ Legenda: 150–300 caracteres. Hashtags: 15–20.`
         const saved = await saveRes.json()
         if (saveRes.ok && saved.id) {
           setPostId(saved.id); setPostSaved(true)
+          // salvar slides no Storage (não-bloqueante)
+          fetch('/api/save-slides', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ post_id: saved.id, slides: parsed.slides, brand }),
+          })
+            .then(r => r.json())
+            .then(d => { if (d.urls) setSlideUrls(d.urls) })
+            .catch(e => console.error('[save-slides]', e))
         } else {
           console.error('[posts] save error:', saved)
         }
@@ -630,7 +654,11 @@ Legenda: 150–300 caracteres. Hashtags: 15–20.`
                         )}
                       </div>
                       <div style={{ aspectRatio: '1/1', background: '#0a0a0a', borderRadius: '6px', overflow: 'hidden' }}>
-                        {renderPreview(output.slides[currentSlide])}
+                        <img
+                          src={slideUrls[currentSlide] || buildRenderUrl(output.slides[currentSlide])}
+                          alt={`Slide ${currentSlide + 1}`}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                        />
                       </div>
                     </div>
 
