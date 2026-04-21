@@ -31,13 +31,12 @@ export type Brand = {
   created_at: string
 }
 
-const OWNER_ID = '00000000-0000-0000-0000-000000000001'
-
-export async function listBrands(): Promise<Brand[]> {
+export async function listBrands(owner_id: string): Promise<Brand[]> {
   const supabase = createAdminSupabaseClient()
   const { data, error } = await supabase
     .from('brands')
     .select('*')
+    .eq('owner_id', owner_id)
     .eq('is_active', true)
     .order('name', { ascending: true })
 
@@ -64,7 +63,7 @@ export async function createBrand(input: {
   tone_of_voice?: string
   visual?: Partial<Brand['visual']>
   content_strategy?: Partial<Brand['content_strategy']>
-}): Promise<Brand> {
+}, owner_id: string): Promise<Brand> {
   const supabase = createAdminSupabaseClient()
 
   const slug = input.name
@@ -77,7 +76,7 @@ export async function createBrand(input: {
   const { data, error } = await supabase
     .from('brands')
     .insert({
-      owner_id: OWNER_ID,
+      owner_id,
       name: input.name,
       slug,
       niche: input.niche ?? null,

@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import { useUser } from '../lib/AuthContext'
 
 const tools = [
   {
@@ -23,6 +24,8 @@ const tools = [
 ]
 
 export default function Dashboard() {
+  const { user, signOut } = useUser()
+
   return (
     <>
       <Head><title>Aexum — Dashboard</title></Head>
@@ -40,13 +43,22 @@ export default function Dashboard() {
                 {tools.length} ferramentas ativas
               </p>
             </div>
-            <span style={{
-              fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)',
-              border: '1px solid var(--border)', borderRadius: 4, padding: '4px 10px',
-              letterSpacing: '0.05em',
-            }}>
-              uso privado
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span style={{
+                fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)',
+                border: '1px solid var(--border)', borderRadius: 4, padding: '4px 10px',
+                letterSpacing: '0.05em', maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+              }}>
+                {user?.email}
+              </span>
+              <button onClick={signOut} style={{
+                background: 'none', border: '1px solid var(--border)', borderRadius: 4,
+                padding: '4px 10px', fontSize: 11, fontFamily: 'var(--font-mono)',
+                color: 'var(--text-muted)', cursor: 'pointer', letterSpacing: '0.05em',
+              }}>
+                sair
+              </button>
+            </div>
           </div>
 
           {/* Tool cards */}

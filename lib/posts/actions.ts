@@ -1,7 +1,5 @@
 import { createAdminSupabaseClient } from '../supabase/server'
 
-const OWNER_ID = '00000000-0000-0000-0000-000000000001'
-
 export type PostInput = {
   brand_id?: string
   format: 'single' | 'carousel' | 'story' | 'reel'
@@ -11,7 +9,7 @@ export type PostInput = {
   copy_variants?: any[]
 }
 
-export async function createPost(input: PostInput) {
+export async function createPost(input: PostInput, owner_id: string) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     throw new Error('Supabase env vars não configuradas (NEXT_PUBLIC_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY)')
   }
@@ -20,7 +18,7 @@ export async function createPost(input: PostInput) {
   const { data, error } = await supabase
     .from('posts')
     .insert({
-      owner_id: OWNER_ID,
+      owner_id,
       status: 'ready_for_review',
       ...(brand_id ? { brand_id } : {}),
       ...rest,
