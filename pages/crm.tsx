@@ -180,7 +180,8 @@ export default function CRM() {
       body: JSON.stringify(body),
     })
     if (res.ok) {
-      setClients(prev => [await res.json(), ...prev])
+      const newClient = await res.json()
+      setClients(prev => [newClient, ...prev])
       setModalOpen(false); setForm({ ...EMPTY_FORM })
     }
     setSaving(false)
