@@ -62,7 +62,8 @@ export default function Sidebar() {
   const { user, signOut } = useUser()
   const router = useRouter()
 
-  const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '—'
+  const rawName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '—'
+  const displayName = rawName.charAt(0).toUpperCase() + rawName.slice(1)
   const initials = displayName.slice(0, 2).toUpperCase()
 
   return (

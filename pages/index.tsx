@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { useUser } from '../lib/AuthContext'
 import Sidebar from '../components/Sidebar'
 
@@ -50,9 +51,20 @@ const tools = [
 ]
 
 export default function Dashboard() {
-  const { user } = useUser()
+  const { user, supabase } = useUser()
+  const [postsCount, setPostsCount] = useState<number | null>(null)
+  const [brandsCount, setBrandsCount] = useState<number | null>(null)
 
-  const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '—'
+  useEffect(() => {
+    if (!user) return
+    supabase.from('posts').select('*', { count: 'exact', head: true }).eq('owner_id', user.id)
+      .then(({ count }) => setPostsCount(count ?? 0))
+    supabase.from('brands').select('*', { count: 'exact', head: true }).eq('owner_id', user.id)
+      .then(({ count }) => setBrandsCount(count ?? 0))
+  }, [user])
+
+  const rawName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '—'
+  const displayName = rawName.charAt(0).toUpperCase() + rawName.slice(1)
 
   return (
     <>
@@ -90,8 +102,8 @@ export default function Dashboard() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 40 }}>
             {[
               { label: 'Ferramentas ativas', value: '2', sub: 'de 3 módulos' },
-              { label: 'Posts gerados', value: '—', sub: 'este mês' },
-              { label: 'Brands cadastradas', value: '—', sub: 'no workspace' },
+              { label: 'Posts gerados', value: postsCount !== null ? String(postsCount) : '—', sub: 'total gerados' },
+              { label: 'Brands cadastradas', value: brandsCount !== null ? String(brandsCount) : '—', sub: 'no workspace' },
             ].map(s => (
               <div key={s.label} style={{
                 background: 'var(--surface)', border: '1px solid var(--border)',
