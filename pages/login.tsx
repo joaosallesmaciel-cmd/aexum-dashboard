@@ -103,8 +103,8 @@ export default function Login() {
           {/* Coluna esquerda — marketing */}
           <div className="left-col" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0 }}>
             {/* Logo */}
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: 48, fontWeight: 800, letterSpacing: '-0.04em', color: 'var(--text)', marginBottom: 16 }}>
-              aexum
+            <div style={{ marginBottom: 16 }}>
+              <img src="/logo.svg" alt="Aexum" style={{ height: 48, width: 'auto' }} />
             </div>
 
             {/* Tagline */}

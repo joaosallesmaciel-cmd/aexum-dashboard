@@ -66,7 +66,7 @@ export default function Sidebar() {
       background: 'var(--surface)',
     }}>
       <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid var(--border)' }}>
-        <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 800, letterSpacing: '-0.03em' }}>aexum</div>
+        <img src="/logo.svg" alt="Aexum" style={{ height: 28, width: 'auto' }} />
         <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', marginTop: 2, letterSpacing: '0.08em' }}>INTELLIGENCE SUITE</div>
       </div>
 
