@@ -184,7 +184,7 @@ export default function Login() {
           margin: 0,
           opacity: 0.5,
         }}>
-          // powered by artificial intelligence
+          // powered by Aexum
         </p>
       </div>
     </>
