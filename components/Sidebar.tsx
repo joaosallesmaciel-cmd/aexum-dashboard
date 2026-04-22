@@ -70,10 +70,12 @@ export default function Sidebar() {
       background: 'var(--surface)',
     }}>
       <div style={{ padding: '24px 20px 20px', borderBottom: '1px solid var(--border)' }}>
-        <svg width="110" height="24" viewBox="0 0 110 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <text x="0" y="18" fontFamily="'Syne', sans-serif" fontWeight="800" fontSize="20" letterSpacing="2" fill="#8DC63F">AEXUM</text>
-      </svg>
-        <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', marginTop: 2, letterSpacing: '0.08em' }}>INTELLIGENCE SUITE</div>
+        <div style={{ fontFamily: "'Astera', sans-serif", fontSize: 16, color: '#8DC63F', letterSpacing: '0.4em', lineHeight: 1 }}>
+          AEXUM
+        </div>
+        <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', marginTop: 4, letterSpacing: '0.08em' }}>
+          INTELLIGENCE SUITE
+        </div>
       </div>
 
       <nav style={{ flex: 1, padding: '12px 10px', display: 'flex', flexDirection: 'column', gap: 2 }}>
