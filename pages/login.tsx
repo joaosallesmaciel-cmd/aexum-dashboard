@@ -104,7 +104,7 @@ export default function Login() {
           <div className="left-col" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0 }}>
             {/* Logo */}
             <div style={{ marginBottom: 16 }}>
-              <img src="/logo.svg" alt="Aexum" style={{ height: 48, width: 'auto' }} />
+              <img src="/logo.svg" alt="Aexum" style={{ height: 80, width: 'auto', maxWidth: 200 }} />
             </div>
 
             {/* Tagline */}
