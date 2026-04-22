@@ -146,10 +146,7 @@ export default function BrandsPage() {
 
           {/* Header */}
           <div style={{ marginBottom: 48 }}>
-            <Link href="/" style={{ color: 'var(--text-muted)', fontSize: 13, fontFamily: 'var(--font-mono)', letterSpacing: '0.05em' }}>
-              ← dashboard
-            </Link>
-            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginTop: 20 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between' }}>
               <div>
                 <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, margin: 0, letterSpacing: '-0.02em' }}>
                   Brands

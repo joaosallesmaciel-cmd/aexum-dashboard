@@ -353,35 +353,6 @@ Use essas referências para orientar o layout e composição dos slides.` : ''}`
       <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)' }}>
         <Sidebar />
         <main style={{ flex: 1, minWidth: 0 }}>
-        {/* Topbar */}
-        <div style={{
-          borderBottom: '1px solid var(--border)',
-          padding: '16px 32px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          position: 'sticky',
-          top: 0,
-          background: 'rgba(14,14,14,0.9)',
-          backdropFilter: 'blur(12px)',
-          zIndex: 10,
-        }}>
-          <Link href="/" style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: '11px',
-            color: 'var(--text-muted)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-          }}>
-            ← Dashboard
-          </Link>
-          <span style={{ color: 'var(--border2)' }}>/</span>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--accent)' }}>
-            posts
-          </span>
-        </div>
-
         <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px 24px' }}>
           {/* Título */}
           <div style={{ marginBottom: '32px' }}>

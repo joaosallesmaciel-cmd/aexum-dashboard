@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import Sidebar from '../../components/Sidebar'
 
 const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   draft:            { label: 'Rascunho',     color: '#6b7280' },
@@ -70,13 +71,14 @@ export default function PostHistory() {
   return (
     <>
       <Head><title>Histórico de Posts — Aexum</title></Head>
-      <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', padding: '48px 24px' }}>
+      <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
+        <Sidebar />
+        <main style={{ flex: 1, minWidth: 0, padding: '48px 24px' }}>
         <div style={{ maxWidth: 960, margin: '0 auto' }}>
 
           {/* Header */}
           <div style={{ marginBottom: 32 }}>
             <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 20 }}>
-              <Link href="/" style={{ ...mono, fontSize: 12, color: 'var(--text-muted)' }}>← dashboard</Link>
               <Link href="/posts" style={{ ...mono, fontSize: 12, color: 'var(--text-muted)' }}>/ gerador</Link>
             </div>
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, margin: 0, letterSpacing: '-0.02em' }}>
@@ -204,6 +206,7 @@ export default function PostHistory() {
             </div>
           )}
         </div>
+        </main>
       </div>
     </>
   )

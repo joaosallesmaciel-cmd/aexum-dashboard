@@ -36,16 +36,6 @@ const nav = [
     ),
   },
   {
-    label: 'Histórico',
-    href: '/posts/history',
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <circle cx="8" cy="8" r="6"/>
-        <path d="M8 5v3.5l2 2" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-  },
-  {
     label: 'CRM',
     href: '/crm',
     icon: (

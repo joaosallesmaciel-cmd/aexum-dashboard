@@ -38,7 +38,7 @@ const tools = [
     name: 'CRM',
     description: 'Funil de vendas, histórico de interações, tarefas e controle de pagamentos',
     href: '/crm',
-    status: 'em breve',
+    status: 'ativo',
     stat: null,
     icon: (
       <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4">
