@@ -293,7 +293,7 @@ export default function CRM() {
           {/* ── Header ── */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
             <div>
-              <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 800, letterSpacing: '-0.03em', margin: 0 }}>CRM</h1>
+              <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 700, letterSpacing: '-0.03em', margin: 0 }}>CRM</h1>
               <p style={{ color: 'var(--text-muted)', fontSize: 13, margin: '4px 0 0', fontFamily: 'var(--font-mono)' }}>
                 {loading ? '...' : `${clients.length} cliente${clients.length !== 1 ? 's' : ''}`}
               </p>
