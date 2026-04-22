@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
+import Sidebar from '../../components/Sidebar'
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -349,7 +350,9 @@ Use essas referências para orientar o layout e composição dos slides.` : ''}`
         @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
 
-      <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
+      <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)' }}>
+        <Sidebar />
+        <main style={{ flex: 1, minWidth: 0 }}>
         {/* Topbar */}
         <div style={{
           borderBottom: '1px solid var(--border)',
@@ -843,6 +846,7 @@ Use essas referências para orientar o layout e composição dos slides.` : ''}`
             </div>
           </div>
         </div>
+        </main>
       </div>
     </>
   )

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import Head from 'next/head'
 import Link from 'next/link'
 import type { Brand } from '../../lib/brands/actions'
+import Sidebar from '../../components/Sidebar'
 
 const GRAPHIC_STYLES = ['minimalista', 'moderno', 'bold', 'elegante', 'divertido', 'corporativo']
 const TONES = ['profissional', 'descontraído', 'inspirador', 'educativo', 'provocativo', 'empático']
@@ -138,7 +139,9 @@ export default function BrandsPage() {
     <>
       <Head><title>Brands — Aexum</title></Head>
 
-      <div style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)', padding: '48px 24px' }}>
+      <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)' }}>
+        <Sidebar />
+        <main style={{ flex: 1, minWidth: 0, padding: '48px 24px' }}>
         <div style={{ maxWidth: 960, margin: '0 auto' }}>
 
           {/* Header */}
@@ -283,6 +286,7 @@ export default function BrandsPage() {
           )}
 
         </div>
+        </main>
       </div>
 
       {/* Toast */}
