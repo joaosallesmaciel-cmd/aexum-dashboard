@@ -73,7 +73,7 @@ export default function PostHistory() {
       <Head><title>Histórico de Posts — Aexum</title></Head>
       <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)' }}>
         <Sidebar />
-        <main style={{ flex: 1, minWidth: 0, padding: '48px 24px' }}>
+        <main style={{ flex: 1, minWidth: 0, padding: '48px 48px' }}>
         <div style={{ maxWidth: 960, margin: '0 auto' }}>
 
           {/* Header */}

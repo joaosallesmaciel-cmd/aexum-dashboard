@@ -288,7 +288,7 @@ export default function CRM() {
       <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)' }}>
         <Sidebar />
 
-        <main style={{ flex: 1, padding: '40px', minWidth: 0 }}>
+        <main style={{ flex: 1, padding: '48px 48px', minWidth: 0 }}>
 
           {/* ── Header ── */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>

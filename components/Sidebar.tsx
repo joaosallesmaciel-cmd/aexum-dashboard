@@ -1,3 +1,4 @@
+// PADRÃO: todo <main> adjacente à Sidebar deve ter padding: '48px 48px'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useUser } from '../lib/AuthContext'

@@ -352,8 +352,8 @@ Use essas referências para orientar o layout e composição dos slides.` : ''}`
 
       <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)' }}>
         <Sidebar />
-        <main style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '32px 24px' }}>
+        <main style={{ flex: 1, minWidth: 0, padding: '48px 48px' }}>
+        <div style={{ maxWidth: '1400px', margin: 0 }}>
           {/* Título */}
           <div style={{ marginBottom: '32px' }}>
             <h1 style={{
