@@ -8,6 +8,12 @@ const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
+const bullets = [
+  'Posts para Instagram gerados por IA',
+  'CRM com funil de vendas visual',
+  'Identidade de marca centralizada',
+]
+
 export default function Login() {
   const router = useRouter()
   const [email, setEmail] = useState('')
@@ -32,10 +38,10 @@ export default function Login() {
   }
 
   const inputStyle = (field: string): React.CSSProperties => ({
-    background: 'var(--surface2)',
-    border: `1px solid ${focusedField === field ? 'var(--accent)' : 'var(--border)'}`,
+    background: 'rgba(255,255,255,0.05)',
+    border: `1px solid ${focusedField === field ? 'var(--accent)' : 'rgba(255,255,255,0.1)'}`,
     borderRadius: 8,
-    padding: '13px 16px',
+    padding: '12px 14px',
     color: 'var(--text)',
     fontSize: 14,
     fontFamily: 'var(--font-body)',
@@ -57,137 +63,153 @@ export default function Login() {
         .cursor {
           display: inline-block;
           width: 2px;
-          height: 1em;
+          height: 0.85em;
           background: var(--accent);
-          margin-left: 2px;
+          margin-left: 3px;
           vertical-align: middle;
           animation: blink 1s step-end infinite;
         }
+        @media (max-width: 767px) {
+          .left-col { display: none !important; }
+          .right-col { width: 100% !important; max-width: 440px !important; }
+          .split-wrap { justify-content: center !important; }
+        }
       `}</style>
 
-      <div style={{
-        minHeight: '100vh',
-        background: '#0e0e0e',
-        backgroundImage: `radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)`,
-        backgroundSize: '24px 24px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 24,
-        gap: 32,
-      }}>
+      {/* Root */}
+      <div style={{ minHeight: '100vh', background: '#0e0e0e', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
 
-        {/* Logo + tagline */}
-        <div style={{ textAlign: 'center' }}>
-          <div style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 36,
-            fontWeight: 800,
-            letterSpacing: '-0.04em',
-            color: 'var(--text)',
-            marginBottom: 10,
-          }}>
-            aexum
+        {/* Grid de linhas SVG */}
+        <svg
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+
+        {/* Gradientes radiais */}
+        <div style={{ position: 'absolute', top: -200, right: -200, width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,240,96,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: -150, left: -150, width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,240,96,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 800, height: 800, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 60%)', pointerEvents: 'none' }} />
+
+        {/* Split layout */}
+        <div className="split-wrap" style={{ position: 'relative', zIndex: 1, display: 'flex', alignItems: 'center', width: '100%', maxWidth: 1100, margin: '0 auto', padding: '48px 48px', gap: 80, boxSizing: 'border-box' }}>
+
+          {/* Coluna esquerda — marketing */}
+          <div className="left-col" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0 }}>
+            {/* Logo */}
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 48, fontWeight: 800, letterSpacing: '-0.04em', color: 'var(--text)', marginBottom: 16 }}>
+              aexum
+            </div>
+
+            {/* Tagline */}
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 15, color: 'var(--text-muted)', marginBottom: 28, display: 'flex', alignItems: 'center' }}>
+              inteligência que escala<span className="cursor" />
+            </div>
+
+            {/* Descrição */}
+            <p style={{ fontSize: 15, color: 'var(--text-dim, #8a8a8a)', lineHeight: 1.7, margin: '0 0 36px', maxWidth: 420 }}>
+              Dashboards inteligentes, geração de conteúdo com IA e CRM unificados para agências que querem crescer sem contratar.
+            </p>
+
+            {/* Bullets */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginBottom: 48 }}>
+              {bullets.map(b => (
+                <div key={b} style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 14, color: 'var(--text-muted)' }}>
+                  <span style={{ color: 'var(--accent)', fontSize: 12, flexShrink: 0 }}>✦</span>
+                  {b}
+                </div>
+              ))}
+            </div>
+
+            {/* Rodapé */}
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)', opacity: 0.4 }}>
+              // powered by Aexum
+            </div>
           </div>
-          <div style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: 13,
-            color: 'var(--text-muted)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 0,
-          }}>
-            inteligência que escala_<span className="cursor" />
-          </div>
-        </div>
 
-        {/* Card */}
-        <div style={{
-          width: '100%',
-          maxWidth: 400,
-          background: 'rgba(255, 255, 255, 0.03)',
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: 16,
-          padding: '40px',
-          boxShadow: '0 0 0 1px rgba(200,240,96,0.05), 0 24px 48px rgba(0,0,0,0.4)',
-        }}>
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            <input
-              type="email"
-              placeholder="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              onFocus={() => setFocusedField('email')}
-              onBlur={() => setFocusedField(null)}
-              required
-              style={inputStyle('email')}
-            />
-            <input
-              type="password"
-              placeholder="senha"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              onFocus={() => setFocusedField('password')}
-              onBlur={() => setFocusedField(null)}
-              required
-              style={inputStyle('password')}
-            />
+          {/* Coluna direita — card de login */}
+          <div className="right-col" style={{ width: 400, flexShrink: 0 }}>
+            <div style={{ position: 'relative', background: 'rgba(22,22,22,0.85)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)', border: '1px solid rgba(200,240,96,0.15)', borderRadius: 20, padding: 40, boxShadow: '0 0 0 1px rgba(200,240,96,0.05), 0 32px 64px rgba(0,0,0,0.5)' }}>
+              {/* Brilho topo */}
+              <div style={{ position: 'absolute', top: 0, left: '10%', right: '10%', height: 1, background: 'linear-gradient(90deg, transparent, rgba(200,240,96,0.4), transparent)', borderRadius: '20px 20px 0 0' }} />
 
-            {error && (
-              <p style={{ color: '#f87171', fontSize: 12, fontFamily: 'var(--font-mono)', margin: 0 }}>
-                // {error}
+              {/* Título */}
+              <div style={{ marginBottom: 28 }}>
+                <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 700, margin: '0 0 4px', letterSpacing: '-0.02em' }}>Entrar</h1>
+                <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0, fontFamily: 'var(--font-mono)' }}>Acesse seu workspace</p>
+              </div>
+
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--text-muted)', marginBottom: 6 }}>EMAIL</div>
+                  <input
+                    type="email"
+                    placeholder="seu@email.com"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    onFocus={() => setFocusedField('email')}
+                    onBlur={() => setFocusedField(null)}
+                    required
+                    style={inputStyle('email')}
+                  />
+                </div>
+
+                <div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.1em', color: 'var(--text-muted)', marginBottom: 6 }}>SENHA</div>
+                  <input
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    onFocus={() => setFocusedField('password')}
+                    onBlur={() => setFocusedField(null)}
+                    required
+                    style={inputStyle('password')}
+                  />
+                </div>
+
+                {error && (
+                  <p style={{ color: '#f87171', fontSize: 12, fontFamily: 'var(--font-mono)', margin: 0 }}>
+                    // {error}
+                  </p>
+                )}
+
+                <button
+                  type="submit"
+                  disabled={loading}
+                  style={{
+                    background: loading ? 'rgba(200,240,96,0.6)' : 'var(--accent)',
+                    color: '#0e0e0e',
+                    border: 'none',
+                    borderRadius: 8,
+                    padding: '13px 16px',
+                    fontSize: 14,
+                    fontWeight: 700,
+                    fontFamily: 'var(--font-mono)',
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    width: '100%',
+                    marginTop: 4,
+                    transition: 'background 0.15s',
+                  }}
+                >
+                  {loading ? 'entrando...' : 'Entrar →'}
+                </button>
+              </form>
+
+              <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--text-muted)', marginTop: 20, marginBottom: 0, fontFamily: 'var(--font-mono)' }}>
+                não tem conta?{' '}
+                <a href="/register" style={{ color: 'var(--accent)', textDecoration: 'none' }}>criar conta</a>
               </p>
-            )}
+            </div>
+          </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                background: loading ? 'rgba(200,240,96,0.6)' : 'var(--accent)',
-                color: '#0e0e0e',
-                border: 'none',
-                borderRadius: 8,
-                padding: '13px 16px',
-                fontSize: 14,
-                fontWeight: 700,
-                fontFamily: 'var(--font-mono)',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                width: '100%',
-                marginTop: 4,
-                transition: 'background 0.15s',
-              }}
-            >
-              {loading ? 'entrando...' : 'entrar'}
-            </button>
-          </form>
-
-          <p style={{
-            textAlign: 'center',
-            fontSize: 12,
-            color: 'var(--text-muted)',
-            marginTop: 20,
-            marginBottom: 0,
-            fontFamily: 'var(--font-mono)',
-          }}>
-            não tem conta?{' '}
-            <a href="/register" style={{ color: 'var(--accent)', textDecoration: 'none' }}>criar conta</a>
-          </p>
         </div>
-
-        {/* Footer */}
-        <p style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: 11,
-          color: 'var(--text-muted)',
-          margin: 0,
-          opacity: 0.5,
-        }}>
-          // powered by Aexum
-        </p>
       </div>
     </>
   )
