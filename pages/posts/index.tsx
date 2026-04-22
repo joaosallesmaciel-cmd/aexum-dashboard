@@ -358,8 +358,8 @@ Use essas referências para orientar o layout e composição dos slides.` : ''}`
           <div style={{ marginBottom: '32px' }}>
             <h1 style={{
               fontFamily: 'var(--font-display)',
-              fontSize: '36px',
-              fontWeight: '800',
+              fontSize: '32px',
+              fontWeight: '700',
               letterSpacing: '-0.03em',
               marginBottom: '4px',
             }}>
