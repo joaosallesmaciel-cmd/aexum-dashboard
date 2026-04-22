@@ -127,6 +127,8 @@ export default function CRM() {
   const [search, setSearch] = useState('')
   const [stageFilter, setStageFilter] = useState<Stage | 'all'>('all')
   const [showClosed, setShowClosed] = useState(false)
+  const [dragClientId, setDragClientId] = useState<string | null>(null)
+  const [dragOverStage, setDragOverStage] = useState<Stage | null>(null)
 
   // Modal
   const [modalOpen, setModalOpen] = useState(false)
@@ -200,6 +202,24 @@ export default function CRM() {
       setClients(prev => prev.map(c => c.id === updated.id ? updated : c))
       setSelectedClient(updated)
     }
+  }
+
+  // ── Drag & drop (kanban) ─────────────────────────────────────────────────
+  async function handleDrop(targetStage: Stage) {
+    setDragOverStage(null)
+    if (!dragClientId) return
+    const client = clients.find(c => c.id === dragClientId)
+    if (!client || client.stage === targetStage) return
+    const res = await fetch(`/api/clients/${dragClientId}`, {
+      method: 'PATCH', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ stage: targetStage }),
+    })
+    if (res.ok) {
+      const updated = await res.json()
+      setClients(prev => prev.map(c => c.id === updated.id ? updated : c))
+    }
+    setDragClientId(null)
   }
 
   // ── Move to next (kanban) ────────────────────────────────────────────────
@@ -385,7 +405,8 @@ export default function CRM() {
                         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                         padding: '10px 12px', background: 'var(--surface)',
                         border: '1px solid var(--border)', borderBottom: 'none', borderRadius: '8px 8px 0 0',
-                      }}>
+                      }}
+                      >
                         <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
                           <span style={{ width: 8, height: 8, borderRadius: '50%', background: STAGE_COLORS[stage], display: 'inline-block' }} />
                           <span style={{ fontSize: 12, fontWeight: 600 }}>{STAGE_LABELS[stage]}</span>
@@ -393,11 +414,17 @@ export default function CRM() {
                         </div>
                         {total > 0 && <span style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{fmt(total)}</span>}
                       </div>
-                      <div style={{
-                        background: 'var(--surface2)', border: '1px solid var(--border)',
-                        borderRadius: '0 0 8px 8px', padding: 8,
-                        display: 'flex', flexDirection: 'column', gap: 8, minHeight: 120,
-                      }}>
+                      <div
+                        onDragOver={e => { e.preventDefault(); setDragOverStage(stage) }}
+                        onDragLeave={() => setDragOverStage(null)}
+                        onDrop={() => handleDrop(stage)}
+                        style={{
+                          background: dragOverStage === stage ? `${STAGE_COLORS[stage]}15` : 'var(--surface2)',
+                          border: `1px solid ${dragOverStage === stage ? STAGE_COLORS[stage] : 'var(--border)'}`,
+                          borderRadius: '0 0 8px 8px', padding: 8,
+                          display: 'flex', flexDirection: 'column', gap: 8, minHeight: 120,
+                          transition: 'background 0.15s, border-color 0.15s',
+                        }}>
                         {cols.length === 0 && (
                           <div style={{ fontSize: 12, color: 'var(--border)', textAlign: 'center', padding: '24px 0', fontFamily: 'var(--font-mono)' }}>vazio</div>
                         )}
@@ -405,8 +432,17 @@ export default function CRM() {
                           const nextIdx = STAGE_ORDER.indexOf(c.stage) + 1
                           const hasNext = nextIdx < STAGE_ORDER.length
                           return (
-                            <div key={c.id} onClick={() => openDrawer(c)}
-                              style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 12px', cursor: 'pointer' }}
+                            <div key={c.id}
+                              draggable
+                              onDragStart={() => setDragClientId(c.id)}
+                              onDragEnd={() => setDragClientId(null)}
+                              onClick={() => openDrawer(c)}
+                              style={{
+                                background: 'var(--surface)', border: '1px solid var(--border)',
+                                borderRadius: 8, padding: '10px 12px',
+                                cursor: 'grab', opacity: dragClientId === c.id ? 0.5 : 1,
+                                transition: 'opacity 0.15s',
+                              }}
                               onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--border2)'}
                               onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
                             >
