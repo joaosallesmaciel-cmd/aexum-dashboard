@@ -8,12 +8,16 @@ const nav = [
     label: 'Dashboard',
     href: '/',
     icon: (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <rect x="1" y="1" width="6" height="6" rx="1.5"/>
-        <rect x="9" y="1" width="6" height="6" rx="1.5"/>
-        <rect x="1" y="9" width="6" height="6" rx="1.5"/>
-        <rect x="9" y="9" width="6" height="6" rx="1.5"/>
-      </svg>
+      <div style={{
+          fontFamily: "'Astera', sans-serif",
+          fontSize: 22,
+          color: '#8DC63F',
+          letterSpacing: '0.6em',
+          lineHeight: 1,
+          fontWeight: 'normal',
+        }}>
+          AEXUM
+        </div>
     ),
   },
   {

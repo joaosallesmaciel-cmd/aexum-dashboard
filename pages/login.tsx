@@ -104,9 +104,16 @@ export default function Login() {
           <div className="left-col" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 0 }}>
             {/* Logo */}
             <div style={{ marginBottom: 16 }}>
-              <svg width="180" height="36" viewBox="0 0 180 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <text x="0" y="28" fontFamily="'Syne', sans-serif" fontWeight="800" fontSize="32" letterSpacing="4" fill="#8DC63F">AEXUM</text>
-            </svg>
+              <div style={{
+                fontFamily: "'Astera', sans-serif",
+                fontSize: 48,
+                color: '#8DC63F',
+                letterSpacing: '0.6em',
+                lineHeight: 1,
+                fontWeight: 'normal',
+              }}>
+                AEXUM
+              </div>
             </div>
 
             {/* Tagline */}
