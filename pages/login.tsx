@@ -107,10 +107,12 @@ export default function Login() {
         <div style={{
           width: '100%',
           maxWidth: 400,
-          background: 'var(--surface)',
-          border: '1px solid var(--border)',
+          background: 'rgba(255, 255, 255, 0.03)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
           borderRadius: 16,
-          padding: 40,
+          padding: '40px',
           boxShadow: '0 0 0 1px rgba(200,240,96,0.05), 0 24px 48px rgba(0,0,0,0.4)',
         }}>
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
