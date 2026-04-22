@@ -142,7 +142,7 @@ export default function BrandsPage() {
       <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)' }}>
         <Sidebar />
         <main style={{ flex: 1, minWidth: 0, padding: '48px 48px' }}>
-        <div style={{ maxWidth: 960, margin: '0 auto' }}>
+        <div style={{ maxWidth: 960, margin: 0 }}>
 
           {/* Header */}
           <div style={{ marginBottom: 48 }}>
