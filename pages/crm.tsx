@@ -227,7 +227,8 @@ export default function CRM() {
       body: JSON.stringify(newInteraction),
     })
     if (res.ok) {
-      setInteractions(prev => [await res.json(), ...prev])
+      const newInteraction = await res.json()
+      setInteractions(prev => [newInteraction, ...prev])
       setNewInteraction({ type: 'nota', content: '' })
     }
     setAddingInteraction(false)
