@@ -1,5 +1,6 @@
 // PADRÃO: todo <main> adjacente à Sidebar deve ter padding: '48px 48px'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useUser } from '../lib/AuthContext'
 
@@ -53,6 +54,23 @@ export default function Sidebar() {
   const { user, signOut } = useUser()
   const router = useRouter()
 
+  const [isDark, setIsDark] = useState(true)
+
+  useEffect(() => {
+    const saved = localStorage.getItem('theme')
+    if (saved === 'light') {
+      document.body.classList.add('light')
+      setIsDark(false)
+    }
+  }, [])
+
+  function toggleTheme() {
+    const next = !isDark
+    setIsDark(next)
+    document.body.classList.toggle('light', !next)
+    localStorage.setItem('theme', next ? 'dark' : 'light')
+  }
+
   const rawName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '—'
   const displayName = rawName.charAt(0).toUpperCase() + rawName.slice(1)
   const initials = displayName.slice(0, 2).toUpperCase()
@@ -95,6 +113,25 @@ export default function Sidebar() {
           )
         })}
       </nav>
+
+      <div style={{ padding: '8px 10px' }}>
+        <button
+          onClick={toggleTheme}
+          style={{
+            width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+            padding: '8px 10px', borderRadius: 7, border: 'none',
+            background: 'transparent', cursor: 'pointer',
+            color: 'var(--text-muted)', fontSize: 13,
+            fontFamily: 'var(--font-body)',
+            transition: 'background 0.12s',
+          }}
+          onMouseEnter={e => e.currentTarget.style.background = 'var(--surface2)'}
+          onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+        >
+          <span style={{ fontSize: 16 }}>{isDark ? '☀️' : '🌙'}</span>
+          {isDark ? 'Light mode' : 'Dark mode'}
+        </button>
+      </div>
 
       <div style={{ padding: '12px 10px', borderTop: '1px solid var(--border)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px', borderRadius: 8, background: 'var(--surface2)' }}>
