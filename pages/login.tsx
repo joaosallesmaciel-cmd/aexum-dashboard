@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import { faviconHref } from '../lib/favicons'
 import { createBrowserClient } from '@supabase/ssr'
 
 const supabase = createBrowserClient(
@@ -53,7 +54,7 @@ export default function Login() {
 
   return (
     <>
-      <Head><title>Login — Aexum</title></Head>
+      <Head><title>Login — Aexum</title><link rel="icon" type="image/svg+xml" href={faviconHref('login')} /></Head>
 
       <style>{`
         @keyframes blink {

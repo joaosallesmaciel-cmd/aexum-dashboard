@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import { faviconHref } from '../lib/favicons'
 import { createBrowserClient } from '@supabase/ssr'
 
 const supabase = createBrowserClient(
@@ -33,7 +34,7 @@ export default function Register() {
 
   return (
     <>
-      <Head><title>Criar conta — Aexum</title></Head>
+      <Head><title>Criar conta — Aexum</title><link rel="icon" type="image/svg+xml" href={faviconHref('login')} /></Head>
       <div style={{
         minHeight: '100vh', background: 'var(--bg)', display: 'flex',
         alignItems: 'center', justifyContent: 'center', padding: 24,

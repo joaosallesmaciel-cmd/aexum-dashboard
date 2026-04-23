@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import { useState, useEffect, useCallback } from 'react'
 import Sidebar from '../components/Sidebar'
+import { faviconHref } from '../lib/favicons'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type Stage = 'lead' | 'contato' | 'reuniao' | 'proposta' | 'negociacao' | 'fechado' | 'perdido'
@@ -283,7 +284,7 @@ export default function CRM() {
 
   return (
     <>
-      <Head><title>CRM — Aexum</title></Head>
+      <Head><title>CRM — Aexum</title><link rel="icon" type="image/svg+xml" href={faviconHref('crm')} /></Head>
 
       <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)' }}>
         <Sidebar />

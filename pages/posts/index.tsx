@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import Sidebar from '../../components/Sidebar'
+import { faviconHref } from '../../lib/favicons'
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -341,7 +342,7 @@ Use essas referências para orientar o layout e composição dos slides.` : ''}`
 
   return (
     <>
-      <Head><title>Gerador de Posts — Aexum</title></Head>
+      <Head><title>Gerador de Posts — Aexum</title><link rel="icon" type="image/svg+xml" href={faviconHref('posts')} /></Head>
       <style>{`
         input:focus, select:focus, textarea:focus {
           border-color: var(--accent) !important;

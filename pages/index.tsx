@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useUser } from '../lib/AuthContext'
 import Sidebar from '../components/Sidebar'
+import { faviconHref } from '../lib/favicons'
 
 const tools = [
   {
@@ -68,7 +69,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <Head><title>Aexum — Dashboard</title></Head>
+      <Head><title>Aexum — Dashboard</title><link rel="icon" type="image/svg+xml" href={faviconHref('dashboard')} /></Head>
 
       <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)' }}>
         <Sidebar />

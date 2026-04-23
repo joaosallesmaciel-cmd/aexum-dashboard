@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import type { Brand } from '../../lib/brands/actions'
 import Sidebar from '../../components/Sidebar'
+import { faviconHref } from '../../lib/favicons'
 
 const GRAPHIC_STYLES = ['minimalista', 'moderno', 'bold', 'elegante', 'divertido', 'corporativo']
 const TONES = ['profissional', 'descontraído', 'inspirador', 'educativo', 'provocativo', 'empático']
@@ -137,7 +138,7 @@ export default function BrandsPage() {
 
   return (
     <>
-      <Head><title>Brands — Aexum</title></Head>
+      <Head><title>Brands — Aexum</title><link rel="icon" type="image/svg+xml" href={faviconHref('brands')} /></Head>
 
       <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', fontFamily: 'var(--font-body)' }}>
         <Sidebar />
