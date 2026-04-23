@@ -3,7 +3,14 @@ import { useState, useEffect } from 'react'
 import Sidebar from '../components/Sidebar'
 import { faviconHref } from '../lib/favicons'
 
-type Tab = 'identidade' | 'script' | 'disponibilidade' | 'integracoes'
+type Tab = 'identidade' | 'script' | 'disponibilidade' | 'integracoes' | 'api'
+
+interface ApiKey {
+  id: string
+  name: string
+  last_used_at: string | null
+  created_at: string
+}
 
 const DAYS = [
   { key: 'mon', label: 'Seg' },
@@ -47,6 +54,14 @@ export default function Settings() {
   const [saved, setSaved] = useState(false)
   const [hasConfig, setHasConfig] = useState(false)
   const [showToken, setShowToken] = useState(false)
+  const [apiKeys, setApiKeys] = useState<ApiKey[]>([])
+  const [newKeyName, setNewKeyName] = useState('')
+  const [generatedKey, setGeneratedKey] = useState('')
+  const [generatingKey, setGeneratingKey] = useState(false)
+  const [keyCopied, setKeyCopied] = useState(false)
+  const [webhookCopied, setWebhookCopied] = useState(false)
+
+  const WEBHOOK_URL = 'https://aexum.com.br/api/agent/webhook'
 
   const [form, setForm] = useState({
     is_active: false,
@@ -70,6 +85,12 @@ export default function Settings() {
     notification_email: '',
     notification_whatsapp: '',
   })
+
+  useEffect(() => {
+    fetch('/api/agent/keys', { credentials: 'include' })
+      .then(r => r.json())
+      .then(d => { if (Array.isArray(d)) setApiKeys(d) })
+  }, [])
 
   useEffect(() => {
     fetch('/api/agent/config', { credentials: 'include' })
@@ -111,11 +132,41 @@ export default function Settings() {
     setTimeout(() => setSaved(false), 2000)
   }
 
+  async function generateApiKey() {
+    if (!newKeyName.trim()) return
+    setGeneratingKey(true)
+    const res = await fetch('/api/agent/keys', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: newKeyName.trim() }),
+    })
+    const data = await res.json()
+    if (data.key) {
+      setGeneratedKey(data.key)
+      setApiKeys(prev => [{ id: data.id, name: data.name, created_at: data.created_at, last_used_at: null }, ...prev])
+      setNewKeyName('')
+    }
+    setGeneratingKey(false)
+  }
+
+  async function deleteApiKey(id: string) {
+    await fetch(`/api/agent/keys?id=${id}`, { method: 'DELETE', credentials: 'include' })
+    setApiKeys(prev => prev.filter(k => k.id !== id))
+  }
+
+  function copyText(text: string, setCopied: (v: boolean) => void) {
+    navigator.clipboard.writeText(text)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
   const tabs: { key: Tab; label: string }[] = [
     { key: 'identidade', label: 'Identidade' },
     { key: 'script', label: 'Script de Vendas' },
     { key: 'disponibilidade', label: 'Disponibilidade' },
     { key: 'integracoes', label: 'Integrações' },
+    { key: 'api', label: 'API & n8n' },
   ]
 
   return (
@@ -312,22 +363,139 @@ export default function Settings() {
                 </div>
               )}
 
-              {/* Save button */}
-              <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)' }}>
-                <button
-                  onClick={save}
-                  disabled={saving}
-                  style={{
-                    padding: '10px 24px', borderRadius: 8, border: 'none',
-                    background: saved ? 'rgba(141,198,63,0.15)' : 'var(--accent)',
-                    color: saved ? '#8DC63F' : '#0e0e0e',
-                    fontSize: 13, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer',
-                    fontFamily: 'var(--font-display)', transition: 'all 0.2s',
-                  }}
-                >
-                  {saving ? 'Salvando...' : saved ? 'Salvo ✓' : 'Salvar alterações'}
-                </button>
-              </div>
+              {/* Tab: API & n8n */}
+              {tab === 'api' && (
+                <div>
+                  {/* Webhook URL */}
+                  <div style={{ marginBottom: 32 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 12 }}>Webhook URL</div>
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                      <input
+                        readOnly
+                        value={WEBHOOK_URL}
+                        style={{ ...inputStyle, flex: 1, fontFamily: 'var(--font-mono)', fontSize: 12, background: 'var(--bg)' }}
+                      />
+                      <button
+                        onClick={() => copyText(WEBHOOK_URL, setWebhookCopied)}
+                        style={{
+                          padding: '10px 16px', borderRadius: 8, border: '1px solid var(--border)',
+                          background: webhookCopied ? 'rgba(141,198,63,0.1)' : 'var(--surface2)',
+                          color: webhookCopied ? '#8DC63F' : 'var(--text-muted)',
+                          cursor: 'pointer', fontSize: 12, whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {webhookCopied ? 'Copiado ✓' : 'Copiar'}
+                      </button>
+                    </div>
+                    <p style={{ margin: '8px 0 0', fontSize: 12, color: 'var(--text-muted)' }}>
+                      Configure esta URL no n8n como destino do webhook da Z-API
+                    </p>
+                  </div>
+
+                  {/* API Keys */}
+                  <div style={{ marginBottom: 24, fontSize: 13, fontWeight: 600 }}>Chaves de API para n8n</div>
+
+                  {/* Generate new key */}
+                  <div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
+                    <input
+                      style={{ ...inputStyle, flex: 1 }}
+                      value={newKeyName}
+                      onChange={e => setNewKeyName(e.target.value)}
+                      placeholder='Ex: "n8n produção"'
+                      onKeyDown={e => { if (e.key === 'Enter') generateApiKey() }}
+                    />
+                    <button
+                      onClick={generateApiKey}
+                      disabled={generatingKey || !newKeyName.trim()}
+                      style={{
+                        padding: '10px 16px', borderRadius: 8, border: 'none',
+                        background: 'var(--accent)', color: '#0e0e0e',
+                        fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap',
+                      }}
+                    >
+                      {generatingKey ? '...' : '+ Gerar chave'}
+                    </button>
+                  </div>
+
+                  {/* Generated key display */}
+                  {generatedKey && (
+                    <div style={{ marginBottom: 24, padding: 16, borderRadius: 10, background: 'var(--bg)', border: '1px solid var(--border)' }}>
+                      <div style={{ padding: '8px 12px', borderRadius: 6, background: '#0e0e0e', marginBottom: 10 }}>
+                        <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: '#8DC63F', wordBreak: 'break-all', letterSpacing: '0.04em' }}>
+                          {generatedKey}
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ fontSize: 12, color: '#f59e0b', display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <span>⚠</span> Copie agora — esta chave não será exibida novamente
+                        </div>
+                        <button
+                          onClick={() => copyText(generatedKey, setKeyCopied)}
+                          style={{
+                            padding: '6px 14px', borderRadius: 6, border: 'none',
+                            background: keyCopied ? 'rgba(141,198,63,0.15)' : 'var(--surface2)',
+                            color: keyCopied ? '#8DC63F' : 'var(--text-muted)',
+                            cursor: 'pointer', fontSize: 12,
+                          }}
+                        >
+                          {keyCopied ? 'Copiado ✓' : 'Copiar'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Keys list */}
+                  {apiKeys.length > 0 && (
+                    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
+                      {apiKeys.map((k, i) => (
+                        <div key={k.id} style={{
+                          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                          padding: '12px 16px', borderBottom: i < apiKeys.length - 1 ? '1px solid var(--border)' : 'none',
+                        }}>
+                          <div>
+                            <div style={{ fontSize: 13, fontWeight: 500 }}>{k.name}</div>
+                            <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginTop: 2 }}>
+                              Criada em {new Date(k.created_at).toLocaleDateString('pt-BR')}
+                              {k.last_used_at && ` · Último uso: ${new Date(k.last_used_at).toLocaleDateString('pt-BR')}`}
+                            </div>
+                          </div>
+                          <button
+                            onClick={() => deleteApiKey(k.id)}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: 'var(--text-muted)', padding: '4px 8px' }}
+                            onMouseEnter={e => e.currentTarget.style.color = '#f87171'}
+                            onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+                          >
+                            remover
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {apiKeys.length === 0 && !generatedKey && (
+                    <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>Nenhuma chave gerada ainda.</p>
+                  )}
+                </div>
+              )}
+
+              {/* Save button — hidden on API tab */}
+              {tab !== 'api' && (
+                <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)' }}>
+                  <button
+                    onClick={save}
+                    disabled={saving}
+                    style={{
+                      padding: '10px 24px', borderRadius: 8, border: 'none',
+                      background: saved ? 'rgba(141,198,63,0.15)' : 'var(--accent)',
+                      color: saved ? '#8DC63F' : '#0e0e0e',
+                      fontSize: 13, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer',
+                      fontFamily: 'var(--font-display)', transition: 'all 0.2s',
+                    }}
+                  >
+                    {saving ? 'Salvando...' : saved ? 'Salvo ✓' : 'Salvar alterações'}
+                  </button>
+                </div>
+              )}
             </>
           )}
         </div>
