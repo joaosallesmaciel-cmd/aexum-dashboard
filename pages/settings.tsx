@@ -327,6 +327,107 @@ export default function Settings() {
                   <div style={{ padding: '12px 16px', borderRadius: 8, background: 'rgba(141,198,63,0.06)', border: '1px solid rgba(141,198,63,0.2)', marginBottom: 24, fontSize: 13, color: 'var(--text-muted)' }}>
                     As integrações permitem que o agente envie e receba mensagens via WhatsApp (Z-API) e agende compromissos via Google Calendar.
                   </div>
+
+                  {/* API Key */}
+                  <div style={{ marginBottom: 28 }}>
+                    <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.06em', marginBottom: 4 }}>CHAVE DE API</div>
+                    <p style={{ margin: '0 0 12px', fontSize: 12, color: 'var(--text-muted)' }}>Use esta chave para autenticar o n8n com o dashboard</p>
+                    <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+                      <input
+                        style={{ ...inputStyle, flex: 1 }}
+                        value={newKeyName}
+                        onChange={e => setNewKeyName(e.target.value)}
+                        placeholder='Ex: n8n produção'
+                        onKeyDown={e => { if (e.key === 'Enter') generateApiKey() }}
+                      />
+                      <button
+                        onClick={generateApiKey}
+                        disabled={generatingKey || !newKeyName.trim()}
+                        style={{
+                          padding: '10px 14px', borderRadius: 8, border: 'none',
+                          background: 'var(--accent)', color: '#0e0e0e',
+                          fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {generatingKey ? '...' : '+ Gerar chave'}
+                      </button>
+                    </div>
+                    {generatedKey && (
+                      <div style={{ marginBottom: 12, padding: 12, borderRadius: 8, background: 'var(--bg)', border: '1px solid var(--border)' }}>
+                        <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
+                          <input
+                            readOnly
+                            value={generatedKey}
+                            style={{ ...inputStyle, flex: 1, fontFamily: 'var(--font-mono)', fontSize: 11, background: '#0e0e0e', color: '#8DC63F', letterSpacing: '0.04em' }}
+                          />
+                          <button
+                            onClick={() => copyText(generatedKey, setKeyCopied)}
+                            style={{
+                              padding: '10px 14px', borderRadius: 8, border: '1px solid var(--border)',
+                              background: keyCopied ? 'rgba(141,198,63,0.1)' : 'var(--surface2)',
+                              color: keyCopied ? '#8DC63F' : 'var(--text-muted)',
+                              cursor: 'pointer', fontSize: 12, whiteSpace: 'nowrap',
+                            }}
+                          >
+                            {keyCopied ? 'Copiado ✓' : 'Copiar'}
+                          </button>
+                        </div>
+                        <div style={{ fontSize: 12, color: '#f59e0b', display: 'flex', alignItems: 'center', gap: 6 }}>
+                          <span>⚠</span> Copie agora — esta chave não será exibida novamente
+                        </div>
+                      </div>
+                    )}
+                    {apiKeys.length > 0 && (
+                      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden' }}>
+                        {apiKeys.map((k, i) => (
+                          <div key={k.id} style={{
+                            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                            padding: '10px 14px', borderBottom: i < apiKeys.length - 1 ? '1px solid var(--border)' : 'none',
+                          }}>
+                            <div>
+                              <div style={{ fontSize: 13, fontWeight: 500 }}>{k.name}</div>
+                              <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginTop: 2 }}>
+                                {new Date(k.created_at).toLocaleDateString('pt-BR')}
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => deleteApiKey(k.id)}
+                              style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 11, color: 'var(--text-muted)', padding: '4px 8px' }}
+                              onMouseEnter={e => e.currentTarget.style.color = '#f87171'}
+                              onMouseLeave={e => e.currentTarget.style.color = 'var(--text-muted)'}
+                            >remover</button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Webhook URL */}
+                  <div style={{ marginBottom: 28 }}>
+                    <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.06em', marginBottom: 4 }}>WEBHOOK URL</div>
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 6 }}>
+                      <input
+                        readOnly
+                        value={WEBHOOK_URL}
+                        style={{ ...inputStyle, flex: 1, fontFamily: 'var(--font-mono)', fontSize: 11, background: 'var(--bg)' }}
+                      />
+                      <button
+                        onClick={() => copyText(WEBHOOK_URL, setWebhookCopied)}
+                        style={{
+                          padding: '10px 14px', borderRadius: 8, border: '1px solid var(--border)',
+                          background: webhookCopied ? 'rgba(141,198,63,0.1)' : 'var(--surface2)',
+                          color: webhookCopied ? '#8DC63F' : 'var(--text-muted)',
+                          cursor: 'pointer', fontSize: 12, whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {webhookCopied ? 'Copiado ✓' : 'Copiar'}
+                      </button>
+                    </div>
+                    <p style={{ margin: 0, fontSize: 12, color: 'var(--text-muted)' }}>Configure esta URL na Z-API como destino do webhook</p>
+                  </div>
+
+                  <div style={{ height: 1, background: 'var(--border)', marginBottom: 24 }} />
+
                   <Field label="Z-API INSTANCE ID">
                     <input style={inputStyle} value={form.zapi_instance} onChange={e => set('zapi_instance', e.target.value)} placeholder="Ex: 3ABC123DEF456" />
                   </Field>
