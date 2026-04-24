@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Aexum — Plataforma de IA e automação para PMEs brasileiras. Organize seu negócio, integre sistemas e escale sem caos." />
+  <meta name="theme-color" content="#000000" />
+  <title>Aexum — Automação inteligente para PMEs que querem escalar</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============================= -->
+  <!-- 1. NAVBAR                     -->
+  <!-- ============================= -->
+  <header class="navbar" id="navbar">
+    <div class="container navbar__inner">
+      <a href="#" class="navbar__logo" aria-label="Aexum — Página inicial">
+        <span class="logo-text">AEXUM</span>
+      </a>
+
+      <nav class="navbar__links" aria-label="Navegação principal">
+        <a href="#produto">Produto</a>
+        <a href="#beneficios">Benefícios</a>
+        <a href="#depoimentos">Depoimentos</a>
+        <a href="#precos">Preços</a>
+      </nav>
+
+      <div class="navbar__actions">
+        <a href="https://app.aexum.com.br/login" class="btn btn--ghost">Entrar</a>
+      </div>
+
+      <button class="navbar__toggle" id="navToggle" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ============================= -->
+    <!-- 2. HERO                       -->
+    <!-- ============================= -->
+    <section class="hero" id="hero">
+      <canvas id="particlesCanvas" class="hero__canvas" aria-hidden="true"></canvas>
+      <div class="hero__gradient" aria-hidden="true"></div>
+
+      <div class="container hero__content">
+        <div class="hero__badge reveal">
+          <span class="hero__badge-dot"></span>
+          IA + Automação para PMEs brasileiras
+        </div>
+
+        <!--
+          HEADLINE — 3 opções sugeridas (descomente a que preferir):
+          Opção 1 (emocional): Pare de apagar incêndios.<br/>Comece a <span>crescer</span>.
+          Opção 2 (benefício): A IA que organiza seu<br/>negócio enquanto você <span>dorme</span>.
+          Opção 3 (racional): Automação inteligente para<br/>PMEs que querem <span>escalar</span>.
+        -->
+        <h1 class="hero__title reveal">
+          Pare de apagar incêndios.<br/>
+          Comece a <span class="text-gradient">crescer</span>.
+        </h1>
+
+        <p class="hero__subtitle reveal">
+          Integre sistemas, automatize processos repetitivos e tome decisões com IA.
+          Tudo em uma plataforma pensada para empresas brasileiras.
+        </p>
+
+        <div class="hero__cta reveal">
+          <a href="https://app.aexum.com.br/login" class="btn btn--primary btn--lg">
+            Comece agora
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M13 5l7 7-7 7"/>
+            </svg>
+          </a>
+          <a href="#produto" class="btn btn--secondary btn--lg">
+            Ver demo
+          </a>
+        </div>
+
+        <div class="hero__trust reveal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957">
+            <path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          </svg>
+          Sem cartão de crédito · Setup em 5 minutos · Cancele quando quiser
+        </div>
+      </div>
+
+      <div class="hero__scroll" aria-hidden="true">
+        <span></span>
+      </div>
+    </section>
+
+    <!-- ============================= -->
+    <!-- 3. SOCIAL PROOF               -->
+    <!-- ============================= -->
+    <section class="social-proof">
+      <div class="container">
+        <p class="social-proof__label reveal">Empresas que confiam na Aexum</p>
+
+        <div class="social-proof__logos reveal">
+          <div class="logo-placeholder">TECHSUL</div>
+          <div class="logo-placeholder">VAREJO+</div>
+          <div class="logo-placeholder">NOVAPME</div>
+          <div class="logo-placeholder">COMERCIA</div>
+          <div class="logo-placeholder">AGILSOFT</div>
+          <div class="logo-placeholder">MERCATO</div>
+        </div>
+
+        <div class="metrics">
+          <div class="metric reveal">
+            <div class="metric__value" data-counter="500" data-suffix="+">0</div>
+            <div class="metric__label">Empresas ativas</div>
+          </div>
+          <div class="metric reveal">
+            <div class="metric__value" data-counter="99.9" data-suffix="%" data-decimals="1">0</div>
+            <div class="metric__label">Uptime garantido</div>
+          </div>
+          <div class="metric reveal">
+            <div class="metric__value" data-counter="10" data-suffix="M+">0</div>
+            <div class="metric__label">Automações executadas</div>
+          </div>
+          <div class="metric reveal">
+            <div class="metric__value" data-counter="40" data-suffix="h">0</div>
+            <div class="metric__label">Economizadas por mês</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================= -->
+    <!-- 4. PROBLEMA / SOLUÇÃO         -->
+    <!-- ============================= -->
+    <section class="problema-solucao" id="beneficios">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">O problema</span>
+          <h2 class="section-title">Sua PME está travada no operacional?</h2>
+          <p class="section-subtitle">Você não está sozinho. 8 em cada 10 gestores enfrentam os mesmos gargalos.</p>
+        </div>
+
+        <div class="ps-grid">
+          <!-- Coluna Problema -->
+          <div class="ps-col ps-col--problem reveal">
+            <h3 class="ps-col__title">
+              <span class="ps-col__icon ps-col__icon--red">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v4M12 17h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+              </span>
+              Antes da Aexum
+            </h3>
+            <ul class="ps-list">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                Dados espalhados em planilhas, WhatsApp e e-mails
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                Horas perdidas em tarefas repetitivas manuais
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                Decisões baseadas no "achismo", sem dados
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                Clientes caindo entre sistemas desconectados
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="3"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                Equipe sobrecarregada, crescimento parado
+              </li>
+            </ul>
+          </div>
+
+          <!-- Coluna Solução -->
+          <div class="ps-col ps-col--solution reveal">
+            <h3 class="ps-col__title">
+              <span class="ps-col__icon ps-col__icon--green">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/></svg>
+              </span>
+              Com a Aexum
+            </h3>
+            <ul class="ps-list">
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
+                Todos os dados integrados em um só lugar
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
+                IA que automatiza tarefas 24/7 no piloto automático
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
+                Dashboards com insights preditivos em tempo real
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
+                Atendimento automatizado no WhatsApp e e-mail
+              </li>
+              <li>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg>
+                Equipe focada no que importa: crescer
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================= -->
+    <!-- 5. FEATURES                   -->
+    <!-- ============================= -->
+    <section class="features" id="produto">
+      <div class="orb orb--1" aria-hidden="true"></div>
+      <div class="orb orb--2" aria-hidden="true"></div>
+
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">Funcionalidades</span>
+          <h2 class="section-title">Tudo que sua PME precisa<br/>em <span class="text-gradient">uma única plataforma</span></h2>
+          <p class="section-subtitle">Módulos integrados, IA embarcada e automações prontas para usar.</p>
+        </div>
+
+        <div class="features-grid">
+
+          <article class="feature-card glass reveal">
+            <div class="feature-card__icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <h3>Atendimento IA no WhatsApp</h3>
+            <p>Agente inteligente que responde clientes 24/7, qualifica leads e notifica sua equipe quando detecta intenção de compra.</p>
+          </article>
+
+          <article class="feature-card glass reveal">
+            <div class="feature-card__icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75M8.5 7.5a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"/>
+              </svg>
+            </div>
+            <h3>CRM Inteligente</h3>
+            <p>Pipeline visual, histórico completo de interações e scoring automático de leads com IA preditiva.</p>
+          </article>
+
+          <article class="feature-card glass reveal">
+            <div class="feature-card__icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 20v-6M6 20V10M18 20V4"/>
+              </svg>
+            </div>
+            <h3>Analytics Preditivo</h3>
+            <p>Dashboards em tempo real que preveem vendas, estoque e tendências antes delas acontecerem.</p>
+          </article>
+
+          <article class="feature-card glass reveal">
+            <div class="feature-card__icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+              </svg>
+            </div>
+            <h3>Geração de Conteúdo</h3>
+            <p>Posts, campanhas e e-mails criados automaticamente pela IA com o tom da sua marca.</p>
+          </article>
+
+          <article class="feature-card glass reveal">
+            <div class="feature-card__icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <h3>Automações sem código</h3>
+            <p>Crie fluxos complexos arrastando blocos. Integre apps, dispare ações e economize horas de trabalho manual.</p>
+          </article>
+
+          <article class="feature-card glass reveal">
+            <div class="feature-card__icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <h3>Segurança Enterprise</h3>
+            <p>Criptografia ponta-a-ponta, LGPD compliance e backups automáticos. Seus dados blindados.</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================= -->
+    <!-- 6. COMO FUNCIONA              -->
+    <!-- ============================= -->
+    <section class="como-funciona">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">Como funciona</span>
+          <h2 class="section-title">Do caos ao controle em <span class="text-gradient">3 passos</span></h2>
+          <p class="section-subtitle">Setup rápido, sem dor de cabeça, sem consultores caros.</p>
+        </div>
+
+        <div class="steps">
+          <div class="step reveal">
+            <div class="step__number">01</div>
+            <h3 class="step__title">Conecte seus sistemas</h3>
+            <p class="step__desc">Integre WhatsApp, planilhas, e-mail, ERP e qualquer outra ferramenta que você já usa. Sem código, sem complicação.</p>
+          </div>
+
+          <div class="step__connector" aria-hidden="true"></div>
+
+          <div class="step reveal">
+            <div class="step__number">02</div>
+            <h3 class="step__title">Configure suas automações</h3>
+            <p class="step__desc">Escolha entre templates prontos ou crie fluxos personalizados. A IA sugere as melhores automações para seu negócio.</p>
+          </div>
+
+          <div class="step__connector" aria-hidden="true"></div>
+
+          <div class="step reveal">
+            <div class="step__number">03</div>
+            <h3 class="step__title">Veja sua empresa crescer</h3>
+            <p class="step__desc">Acompanhe métricas em tempo real, receba insights preditivos e tome decisões baseadas em dados reais.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================= -->
+    <!-- 7. DEPOIMENTOS                -->
+    <!-- ============================= -->
+    <section class="depoimentos" id="depoimentos">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">Depoimentos</span>
+          <h2 class="section-title">Gestores que transformaram<br/>suas PMEs com a <span class="text-gradient">Aexum</span></h2>
+        </div>
+
+        <div class="testimonials-grid">
+
+          <article class="testimonial glass reveal">
+            <div class="testimonial__stars" aria-label="5 de 5 estrelas">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+            </div>
+            <blockquote class="testimonial__text">
+              "Em 3 meses cortamos 70% do trabalho manual da equipe. O atendimento via WhatsApp da Aexum virou nosso melhor vendedor — nunca dorme e nunca perde um lead."
+            </blockquote>
+            <footer class="testimonial__author">
+              <div class="testimonial__avatar">MR</div>
+              <div>
+                <strong>Marcos Ribeiro</strong>
+                <span>CEO · Varejo+ Distribuidora</span>
+              </div>
+            </footer>
+          </article>
+
+          <article class="testimonial glass reveal">
+            <div class="testimonial__stars" aria-label="5 de 5 estrelas">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+            </div>
+            <blockquote class="testimonial__text">
+              "Sempre achei que IA era coisa de grande empresa. A Aexum provou o contrário — em 2 semanas já tinha dashboard preditivo mostrando onde estava perdendo dinheiro."
+            </blockquote>
+            <footer class="testimonial__author">
+              <div class="testimonial__avatar">CS</div>
+              <div>
+                <strong>Camila Santos</strong>
+                <span>Diretora · NovaPME Serviços</span>
+              </div>
+            </footer>
+          </article>
+
+          <article class="testimonial glass reveal">
+            <div class="testimonial__stars" aria-label="5 de 5 estrelas">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="#89D957"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+            </div>
+            <blockquote class="testimonial__text">
+              "Testei 4 plataformas antes. A Aexum é a única que realmente entende a realidade da PME brasileira — preço justo, suporte em português e resultado rápido."
+            </blockquote>
+            <footer class="testimonial__author">
+              <div class="testimonial__avatar">RL</div>
+              <div>
+                <strong>Rafael Lima</strong>
+                <span>Fundador · Comercia Atacado</span>
+              </div>
+            </footer>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================= -->
+    <!-- 8. PREÇOS                     -->
+    <!-- ============================= -->
+    <section class="precos" id="precos">
+      <div class="orb orb--3" aria-hidden="true"></div>
+
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-tag">Planos</span>
+          <h2 class="section-title">Preço justo que <span class="text-gradient">cresce com você</span></h2>
+          <p class="section-subtitle">Sem taxa de setup. Sem surpresas. Cancele quando quiser.</p>
+        </div>
+
+        <div class="pricing-grid">
+
+          <article class="pricing-card reveal">
+            <header class="pricing-card__header">
+              <h3>Starter</h3>
+              <p class="pricing-card__desc">Para microempresas iniciando a jornada de automação</p>
+            </header>
+            <div class="pricing-card__price">
+              <span class="pricing-card__currency">R$</span>
+              <span class="pricing-card__value">97</span>
+              <span class="pricing-card__period">/mês</span>
+            </div>
+            <ul class="pricing-card__features">
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> Até 1.000 automações/mês</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> Atendimento IA WhatsApp</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> CRM básico</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> 2 usuários inclusos</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> Suporte por e-mail</li>
+            </ul>
+            <a href="https://app.aexum.com.br/login" class="btn btn--secondary btn--block">Começar grátis</a>
+          </article>
+
+          <article class="pricing-card pricing-card--featured glass-premium reveal">
+            <div class="pricing-card__badge">Mais popular</div>
+            <header class="pricing-card__header">
+              <h3>Growth</h3>
+              <p class="pricing-card__desc">Para PMEs em crescimento acelerado</p>
+            </header>
+            <div class="pricing-card__price">
+              <span class="pricing-card__currency">R$</span>
+              <span class="pricing-card__value">297</span>
+              <span class="pricing-card__period">/mês</span>
+            </div>
+            <ul class="pricing-card__features">
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> Automações <strong>ilimitadas</strong></li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> IA avançada + preditiva</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> CRM completo + analytics</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> 10 usuários inclusos</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> Gerador de conteúdo IA</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> Suporte prioritário</li>
+            </ul>
+            <a href="https://app.aexum.com.br/login" class="btn btn--primary btn--block">Começar agora</a>
+          </article>
+
+          <article class="pricing-card reveal">
+            <header class="pricing-card__header">
+              <h3>Scale</h3>
+              <p class="pricing-card__desc">Para empresas médias já estruturadas</p>
+            </header>
+            <div class="pricing-card__price">
+              <span class="pricing-card__currency">R$</span>
+              <span class="pricing-card__value">697</span>
+              <span class="pricing-card__period">/mês</span>
+            </div>
+            <ul class="pricing-card__features">
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> Tudo do Growth</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> API + integrações custom</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> IA treinada com seus dados</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> Usuários ilimitados</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> Gerente de sucesso dedicado</li>
+              <li><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#89D957" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg> SLA de 99,9%</li>
+            </ul>
+            <a href="https://app.aexum.com.br/login" class="btn btn--secondary btn--block">Falar com vendas</a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================= -->
+    <!-- 9. FAQ                        -->
+    <!-- ============================= -->
+    <section class="faq" id="faq">
+      <div class="container container--narrow">
+        <div class="section-header reveal">
+          <span class="section-tag">FAQ</span>
+          <h2 class="section-title">Perguntas <span class="text-gradient">frequentes</span></h2>
+          <p class="section-subtitle">Tudo que você precisa saber antes de começar.</p>
+        </div>
+
+        <div class="faq-list">
+
+          <details class="faq-item glass reveal">
+            <summary>
+              Preciso de conhecimento técnico para usar a Aexum?
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-item__content">
+              <p>Não. A Aexum foi desenhada para gestores de PMEs, não para desenvolvedores. Você arrasta, solta e configura tudo em português, com templates prontos para os casos mais comuns.</p>
+            </div>
+          </details>
+
+          <details class="faq-item glass reveal">
+            <summary>
+              Quanto tempo leva para integrar com meus sistemas atuais?
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-item__content">
+              <p>A maioria dos clientes está operando em menos de 5 minutos com os templates prontos. Integrações mais complexas (ERPs customizados) levam em média 1 a 3 dias úteis, com apoio da nossa equipe.</p>
+            </div>
+          </details>
+
+          <details class="faq-item glass reveal">
+            <summary>
+              A IA da Aexum é segura com os dados da minha empresa?
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-item__content">
+              <p>Sim. Seus dados são criptografados ponta-a-ponta, armazenados em servidores brasileiros e jamais usados para treinar modelos de terceiros. Somos 100% compatíveis com LGPD.</p>
+            </div>
+          </details>
+
+          <details class="faq-item glass reveal">
+            <summary>
+              Posso cancelar a qualquer momento?
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-item__content">
+              <p>Sim, sem multa e sem burocracia. Você cancela direto no painel em 2 cliques. Seus dados ficam disponíveis para exportação por 30 dias após o cancelamento.</p>
+            </div>
+          </details>
+
+          <details class="faq-item glass reveal">
+            <summary>
+              Como funciona o suporte?
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-item__content">
+              <p>Suporte em português por chat e e-mail de segunda a sábado. Planos Growth e Scale têm suporte prioritário e, no Scale, gerente de sucesso dedicado que te ajuda a extrair o máximo da plataforma.</p>
+            </div>
+          </details>
+
+          <details class="faq-item glass reveal">
+            <summary>
+              A Aexum atende qual porte de empresa?
+              <svg class="faq-chevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="faq-item__content">
+              <p>Somos especializados em PMEs brasileiras de 1 a 250 colaboradores, com foco em varejo, serviços e distribuição. Temos clientes desde MEIs solo até empresas médias com times comerciais estruturados.</p>
+            </div>
+          </details>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================= -->
+    <!-- 10. CTA FINAL                 -->
+    <!-- ============================= -->
+    <section class="cta-final">
+      <div class="container">
+        <div class="cta-final__inner reveal">
+          <h2 class="cta-final__title">Pronto para deixar o caos<br/>para trás?</h2>
+          <p class="cta-final__subtitle">
+            Junte-se a centenas de PMEs brasileiras que já transformaram suas operações com IA e automação.
+          </p>
+          <a href="https://app.aexum.com.br/login" class="btn btn--dark btn--lg">
+            Começar agora
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M13 5l7 7-7 7"/>
+            </svg>
+          </a>
+          <p class="cta-final__trust">Setup em 5 minutos · Sem cartão de crédito · Cancele quando quiser</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================= -->
+    <!-- 11. FOOTER                    -->
+    <!-- ============================= -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__grid">
+
+          <div class="footer__brand">
+            <div class="logo-text footer__logo">AEXUM</div>
+            <p class="footer__tagline">Automação inteligente para PMEs brasileiras.</p>
+            <div class="footer__social">
+              <a href="#" aria-label="Instagram">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37zM17.5 6.5h.01"/></svg>
+              </a>
+              <a href="#" aria-label="LinkedIn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg>
+              </a>
+              <a href="#" aria-label="YouTube">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><path d="m9.75 15.02 5.75-3.27-5.75-3.27z"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="footer__col">
+            <h4>Produto</h4>
+            <ul>
+              <li><a href="#produto">Funcionalidades</a></li>
+              <li><a href="#precos">Preços</a></li>
+              <li><a href="#">Integrações</a></li>
+              <li><a href="#">Roadmap</a></li>
+            </ul>
+          </div>
+
+          <div class="footer__col">
+            <h4>Empresa</h4>
+            <ul>
+              <li><a href="#">Sobre</a></li>
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Carreiras</a></li>
+              <li><a href="#">Contato</a></li>
+            </ul>
+          </div>
+
+          <div class="footer__col">
+            <h4>Legal</h4>
+            <ul>
+              <li><a href="#">Termos de uso</a></li>
+              <li><a href="#">Política de privacidade</a></li>
+              <li><a href="#">LGPD</a></li>
+              <li><a href="#">Segurança</a></li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="footer__bottom">
+          <p>© 2026 Aexum. Todos os direitos reservados.</p>
+          <p>Feito com <span style="color:#89D957">●</span> no Brasil</p>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
