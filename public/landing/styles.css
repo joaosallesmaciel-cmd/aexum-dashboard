@@ -1383,3 +1383,129 @@ p { color: var(--text-secondary); }
     transform: none;
   }
 }
+
+/* ============================= */
+/* AEXUM AGENT SECTION           */
+/* ============================= */
+.agent { padding: var(--section-py) 0; position: relative; overflow: hidden; }
+.agent-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+.agent-card { padding: 2rem; }
+.agent-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--gradient-brand-soft);
+  border: 1px solid rgba(137, 217, 87, 0.2);
+  color: var(--c-primary);
+  margin-bottom: 1.25rem;
+}
+.agent-card h3 { margin-bottom: 1rem; font-size: 1.25rem; }
+.agent-card ul { display: flex; flex-direction: column; gap: 0.625rem; list-style: none; }
+.agent-card ul li {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  padding-left: 1rem;
+  position: relative;
+}
+.agent-card ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--c-primary);
+  box-shadow: 0 0 8px var(--c-primary);
+}
+.agent-impact {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  padding: 3rem 2rem;
+  background: linear-gradient(135deg, rgba(137,217,87,0.08), rgba(137,217,87,0.02));
+  border: 1px solid rgba(137, 217, 87, 0.2);
+  border-radius: 24px;
+  text-align: center;
+}
+.agent-impact__number {
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 700;
+  background: var(--gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+.agent-impact__item p { font-size: 0.9375rem; color: var(--text-secondary); }
+
+/* ============================= */
+/* COMPARATIVO SECTION           */
+/* ============================= */
+.comparativo { padding: var(--section-py) 0; background: var(--bg-elevated); }
+.compare-table {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 20px;
+}
+.compare-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.compare-row:last-child { border-bottom: none; }
+.compare-row--header {
+  background: rgba(255, 255, 255, 0.02);
+  font-weight: 600;
+}
+.compare-cell {
+  padding: 1.25rem 1.5rem;
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-right: 1px solid var(--border-subtle);
+}
+.compare-cell:last-child { border-right: none; }
+.compare-cell--feature {
+  color: var(--text-primary);
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.02);
+}
+.compare-cell--neutral { color: var(--text-muted); font-weight: 600; }
+.compare-cell--brand {
+  color: var(--c-primary);
+  font-weight: 700;
+  background: rgba(137, 217, 87, 0.05);
+}
+.compare-x { color: #ff6b6b; font-weight: 700; }
+.compare-check { color: var(--c-primary); font-weight: 700; }
+
+@media (max-width: 768px) {
+  .compare-row { grid-template-columns: 1fr; }
+  .compare-cell {
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 1rem 1.25rem;
+    font-size: 0.875rem;
+  }
+  .compare-cell--feature {
+    background: rgba(137, 217, 87, 0.05);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    padding: 0.75rem 1.25rem;
+  }
+  .compare-row--header { display: none; }
+}
