@@ -1493,19 +1493,92 @@ p { color: var(--text-secondary); }
 .compare-check { color: var(--c-primary); font-weight: 700; }
 
 @media (max-width: 768px) {
-  .compare-row { grid-template-columns: 1fr; }
-  .compare-cell {
-    border-right: none;
-    border-bottom: 1px solid var(--border-subtle);
-    padding: 1rem 1.25rem;
-    font-size: 0.875rem;
+  /* Esconde o cabeçalho original (Chatbots comuns | Aexum Agent) */
+  .compare-row--header {
+    display: none;
   }
+
+  /* Cada linha vira um "mini card" com título no topo */
+  .compare-row {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    border-bottom: none;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .compare-row:last-child {
+    margin-bottom: 0;
+  }
+
+  /* O título da categoria ocupa as 2 colunas */
   .compare-cell--feature {
-    background: rgba(137, 217, 87, 0.05);
-    text-transform: uppercase;
+    grid-column: 1 / -1;
+    background: rgba(137, 217, 87, 0.08);
+    color: var(--c-primary);
+    font-weight: 700;
     font-size: 0.75rem;
+    text-transform: uppercase;
     letter-spacing: 0.1em;
-    padding: 0.75rem 1.25rem;
+    padding: 0.875rem 1rem;
+    text-align: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--border-subtle);
   }
-  .compare-row--header { display: none; }
+
+  /* Mini cabeçalho repetido em cada linha (Chatbots | Aexum) */
+  .compare-row::before {
+    content: 'Chatbots';
+    grid-column: 1;
+    padding: 0.5rem 0.75rem 0.25rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .compare-row::after {
+    content: 'Aexum Agent';
+    grid-column: 2;
+    padding: 0.5rem 0.75rem 0.25rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: var(--c-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: center;
+    background: rgba(137, 217, 87, 0.05);
+  }
+
+  /* Células de conteúdo lado a lado */
+  .compare-cell {
+    padding: 0.875rem 0.75rem 1.125rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    border-right: 1px solid var(--border-subtle);
+    border-bottom: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.375rem;
+    text-align: left;
+  }
+
+  /* Coluna direita (Aexum) com fundo verde sutil */
+  .compare-cell:last-child {
+    border-right: none;
+    background: rgba(137, 217, 87, 0.04);
+    color: var(--c-primary-light);
+  }
+
+  /* Ícones ✕ e ✓ ficam acima do texto */
+  .compare-x,
+  .compare-check {
+    font-size: 1rem;
+  }
 }
