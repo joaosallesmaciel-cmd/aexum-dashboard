@@ -1373,14 +1373,14 @@ p { color: var(--text-secondary); }
 /* Reduz animações para usuários que preferem menos movimento */
 /* Logo image no navbar */
 .logo-img {
-  height: 32px;
+  height: 56px;
   width: auto;
   display: block;
 }
 
 /* Logo image no footer */
 .footer__logo-img {
-  height: 40px;
+  height: 64px;
   width: auto;
   display: block;
   margin-bottom: 1rem;
@@ -1403,10 +1403,10 @@ p { color: var(--text-secondary); }
 /* Mobile: ajusta tamanho do logo no navbar */
 @media (max-width: 768px) {
   .logo-img {
-    height: 26px;
+    height: 44px;
   }
   .footer__logo-img {
-    height: 34px;
+    height: 52px;
   }
 }
 
