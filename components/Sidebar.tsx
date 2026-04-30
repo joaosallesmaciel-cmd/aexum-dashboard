@@ -18,26 +18,6 @@ const nav = [
     ),
   },
   {
-    label: 'Brands',
-    href: '/brands',
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <circle cx="8" cy="6" r="3"/>
-        <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
-  {
-    label: 'Gerador de Posts',
-    href: '/posts',
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <rect x="1" y="1" width="14" height="14" rx="2"/>
-        <path d="M4 5h8M4 8h5M4 11h3" strokeLinecap="round"/>
-      </svg>
-    ),
-  },
-  {
     label: 'CRM',
     href: '/crm',
     icon: (
