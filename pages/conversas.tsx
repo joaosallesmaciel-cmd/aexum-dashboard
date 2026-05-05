@@ -63,39 +63,59 @@ export default function Conversas() {
       .finally(() => setLoading(false))
   }, [])
 
-  // Fetch messages from agent_chat_memory using whatsapp_number
+  async function fetchMessages(sessionId: string): Promise<any[]> {
+    const { data: sessionData } = await supabase
+      .from('agent_sessions')
+      .select('whatsapp_number')
+      .eq('id', sessionId)
+      .single()
+
+    if (!sessionData?.whatsapp_number) {
+      console.error('whatsapp_number não encontrado para sessionId:', sessionId)
+      return []
+    }
+
+    const whatsappNumber = sessionData.whatsapp_number
+    console.log('[DEBUG] sessionId:', sessionId, '→ whatsappNumber:', whatsappNumber)
+
+    const { data: messages, error } = await supabase
+      .from('agent_chat_memory')
+      .select('id, message')
+      .eq('session_id', whatsappNumber)
+      .order('id', { ascending: true })
+
+    console.log('[DEBUG] mensagens encontradas:', messages?.length, 'erro:', error)
+    console.log('[RAW]', JSON.stringify(messages?.slice(0, 3), null, 2))
+
+    return messages || []
+  }
+
+  // Fetch messages from agent_chat_memory using whatsapp_number via agent_sessions
   useEffect(() => {
     if (!selected) return
     setMessages([])
     setMsgLoading(true)
 
-    supabase
-      .from('agent_chat_memory')
-      .select('id, message')
-      .eq('session_id', selected.whatsapp_number)
-      .order('id', { ascending: true })
-      .then(({ data }) => {
-        console.log('[RAW agent_chat_memory]', JSON.stringify(data?.slice(0, 6), null, 2))
-        const normalized: ChatMessage[] = (data ?? [])
-          .map((r: any) => ({
-            id: r.id,
-            type: (r.message?.type ?? '').toString().trim().toLowerCase() as 'human' | 'ai',
-            content: extractContent(r.message),
-          }))
-          .filter((m: ChatMessage) => m.content !== '')
+    fetchMessages(selected.id).then(data => {
+      const normalized: ChatMessage[] = data
+        .map((r: any) => ({
+          id: r.id,
+          type: (r.message?.type ?? '').toString().trim().toLowerCase() as 'human' | 'ai',
+          content: extractContent(r.message),
+        }))
+        .filter((m: ChatMessage) => m.content !== '')
 
-        const seen = new Set<string>()
-        const deduped = normalized.filter((m: ChatMessage) => {
-          const key = `${m.type}:${m.content.substring(0, 50)}`
-          if (seen.has(key)) return false
-          seen.add(key)
-          return true
-        })
-
-        console.log('Mensagens carregadas:', deduped.map(m => ({ id: m.id, type: m.type, preview: m.content.substring(0, 30) })))
-        setMessages(deduped)
+      const seen = new Set<string>()
+      const deduped = normalized.filter((m: ChatMessage) => {
+        const key = `${m.type}:${m.content.substring(0, 50)}`
+        if (seen.has(key)) return false
+        seen.add(key)
+        return true
       })
-      .finally(() => setMsgLoading(false))
+
+      console.log('Mensagens carregadas:', deduped.map(m => ({ id: m.id, type: m.type, preview: m.content.substring(0, 30) })))
+      setMessages(deduped)
+    }).finally(() => setMsgLoading(false))
   }, [selected?.id])
 
   // Auto scroll
