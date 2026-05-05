@@ -75,6 +75,7 @@ export default function Conversas() {
       .eq('session_id', selected.whatsapp_number)
       .order('id', { ascending: true })
       .then(({ data }) => {
+        console.log('[RAW agent_chat_memory]', JSON.stringify(data?.slice(0, 6), null, 2))
         const normalized: ChatMessage[] = (data ?? [])
           .map((r: any) => ({
             id: r.id,
