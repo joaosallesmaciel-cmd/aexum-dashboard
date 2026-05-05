@@ -187,7 +187,9 @@ export default function CRM() {
     fetchInteractions(c.id)
     if (c.whatsapp) {
       setChatLoading(true)
-      fetch(`/api/chat-messages?whatsapp_number=${encodeURIComponent(c.whatsapp)}`, { credentials: 'include' })
+      const digits = c.whatsapp.replace(/\D/g, '')
+      const normalized = digits.startsWith('55') ? digits : `55${digits}`
+      fetch(`/api/chat-messages?whatsapp_number=${encodeURIComponent(normalized)}`, { credentials: 'include' })
         .then(r => r.json())
         .then(d => {
           const msgs = (d.messages || []).slice(-5)
@@ -776,11 +778,11 @@ export default function CRM() {
                 {/* Delete */}
                 <section style={{ paddingTop: 8, borderTop: '1px solid var(--border)' }}>
                   <button onClick={handleDelete} disabled={deleting} style={{
-                    background: 'none', border: '1px solid #ef4444', borderRadius: 8,
-                    padding: '8px 16px', fontSize: 12, color: '#ef4444',
-                    cursor: 'pointer', fontFamily: 'var(--font-mono)', width: '100%',
+                    background: 'none', border: '1px solid rgba(239,68,68,0.4)', borderRadius: 6,
+                    padding: '5px 12px', fontSize: 11, color: 'rgba(239,68,68,0.7)',
+                    cursor: 'pointer', fontFamily: 'var(--font-mono)',
                     opacity: deleting ? 0.6 : 1,
-                  }}>{deleting ? 'Deletando...' : 'Deletar cliente'}</button>
+                  }}>{deleting ? 'deletando...' : 'deletar cliente'}</button>
                 </section>
               </div>
             </aside>
