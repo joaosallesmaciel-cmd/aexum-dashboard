@@ -21,6 +21,19 @@ type ChatMessage = {
   content: string
 }
 
+function extractContent(message: any): string {
+  const content = message.content
+  if (typeof content === 'string' && content.trim() !== '') return content
+  if (Array.isArray(content)) {
+    const textBlock = content.find((c: any) => c.type === 'text' && c.text)
+    if (textBlock) return textBlock.text
+    if (message.text) return message.text
+    if (message.response_metadata?.content) return message.response_metadata.content
+    return ''
+  }
+  return ''
+}
+
 function timeAgo(iso: string | null) {
   if (!iso) return ''
   const diff = Date.now() - new Date(iso).getTime()
@@ -61,20 +74,25 @@ export default function Conversas() {
       .select('id, message')
       .eq('session_id', selected.whatsapp_number)
       .order('id', { ascending: true })
-      .then(({ data, error }) => {
-        console.log('[agent_chat_memory] raw data:', data, 'error:', error)
-        const normalized: ChatMessage[] = (data ?? []).map((r: any) => {
-          const type = (r.message?.type ?? '').toString().trim().toLowerCase()
-          const rawContent = r.message?.content
-          const content = typeof rawContent === 'string'
-            ? rawContent
-            : typeof rawContent === 'object' && rawContent !== null
-              ? JSON.stringify(rawContent)
-              : ''
-          return { id: r.id, type: type as 'human' | 'ai', content }
+      .then(({ data }) => {
+        const normalized: ChatMessage[] = (data ?? [])
+          .map((r: any) => ({
+            id: r.id,
+            type: (r.message?.type ?? '').toString().trim().toLowerCase() as 'human' | 'ai',
+            content: extractContent(r.message),
+          }))
+          .filter((m: ChatMessage) => m.content !== '')
+
+        const seen = new Set<string>()
+        const deduped = normalized.filter((m: ChatMessage) => {
+          const key = `${m.type}:${m.content.substring(0, 50)}`
+          if (seen.has(key)) return false
+          seen.add(key)
+          return true
         })
-        console.log('Mensagens carregadas:', normalized.map(m => ({ id: m.id, type: m.type, preview: m.content.substring(0, 30) })))
-        setMessages(normalized)
+
+        console.log('Mensagens carregadas:', deduped.map(m => ({ id: m.id, type: m.type, preview: m.content.substring(0, 30) })))
+        setMessages(deduped)
       })
       .finally(() => setMsgLoading(false))
   }, [selected?.id])
