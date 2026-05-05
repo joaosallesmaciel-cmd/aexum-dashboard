@@ -61,12 +61,19 @@ export default function Conversas() {
       .select('id, message')
       .eq('session_id', selected.whatsapp_number)
       .order('id', { ascending: true })
-      .then(({ data }) => {
-        const normalized: ChatMessage[] = (data ?? []).map((r: any) => ({
-          id: r.id,
-          type: r.message?.type as 'human' | 'ai',
-          content: r.message?.content ?? '',
-        }))
+      .then(({ data, error }) => {
+        console.log('[agent_chat_memory] raw data:', data, 'error:', error)
+        const normalized: ChatMessage[] = (data ?? []).map((r: any) => {
+          const type = (r.message?.type ?? '').toString().trim().toLowerCase()
+          const rawContent = r.message?.content
+          const content = typeof rawContent === 'string'
+            ? rawContent
+            : typeof rawContent === 'object' && rawContent !== null
+              ? JSON.stringify(rawContent)
+              : ''
+          return { id: r.id, type: type as 'human' | 'ai', content }
+        })
+        console.log('Mensagens carregadas:', normalized.map(m => ({ id: m.id, type: m.type, preview: m.content.substring(0, 30) })))
         setMessages(normalized)
       })
       .finally(() => setMsgLoading(false))
@@ -97,7 +104,11 @@ export default function Conversas() {
             type: r.message?.type,
             content: r.message?.content ?? '',
           }
-          setMessages(prev => [...prev, msg])
+          setMessages(prev => {
+            const ids = new Set(prev.map(m => m.id))
+            if (ids.has(msg.id)) return prev
+            return [...prev, msg]
+          })
           // Update session list preview
           setSessions(prev =>
             prev.map(s =>
@@ -123,9 +134,10 @@ export default function Conversas() {
 
   const displayName = (s: SessionItem) => s.whatsapp_name || s.clients?.name || s.whatsapp_number
 
-  function msgStyle(type: 'human' | 'ai'): { align: 'flex-start' | 'flex-end'; bg: string; color: string; label: string } {
+  function msgStyle(type: string): { align: 'flex-start' | 'flex-end'; bg: string; color: string; label: string } {
     if (type === 'human') return { align: 'flex-start', bg: '#1a1a1a', color: '#ffffff', label: 'Cliente' }
-    return { align: 'flex-end', bg: '#89d957', color: '#000000', label: 'Bia' }
+    if (type === 'ai') return { align: 'flex-end', bg: '#89d957', color: '#000000', label: 'Bia' }
+    return { align: 'flex-end', bg: '#2a5298', color: '#ffffff', label: 'Você' }
   }
 
   return (
