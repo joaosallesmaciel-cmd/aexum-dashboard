@@ -74,6 +74,14 @@ function formatDate(iso: string) {
   return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
 }
 
+const TOKEN_LIMIT = 100_000
+
+interface TokenUsage {
+  input_tokens: number
+  output_tokens: number
+  total: number
+}
+
 export default function AgentPage() {
   const [sessions, setSessions] = useState<Session[]>([])
   const [loading, setLoading] = useState(true)
@@ -83,6 +91,8 @@ export default function AgentPage() {
   const [selected, setSelected] = useState<Session | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
   const [msgLoading, setMsgLoading] = useState(false)
+
+  const [tokens, setTokens] = useState<TokenUsage>({ input_tokens: 0, output_tokens: 0, total: 0 })
 
   useEffect(() => {
     fetch('/api/agent/config', { credentials: 'include' })
@@ -94,6 +104,10 @@ export default function AgentPage() {
       .then(setSessions)
       .catch(e => setError(e.message))
       .finally(() => setLoading(false))
+
+    fetch('/api/agent/tokens', { credentials: 'include' })
+      .then(r => r.json())
+      .then(d => { if (d && typeof d.total === 'number') setTokens(d) })
   }, [])
 
   function openSession(session: Session) {
@@ -163,6 +177,47 @@ export default function AgentPage() {
                 <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>{card.label}</div>
               </div>
             ))}
+          </div>
+
+          {/* Token usage */}
+          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '20px 24px', marginBottom: 40 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>Consumo de tokens</div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>
+                {tokens.total.toLocaleString('pt-BR')} / {TOKEN_LIMIT.toLocaleString('pt-BR')}
+              </div>
+            </div>
+            {/* Progress bar */}
+            <div style={{ height: 8, borderRadius: 4, background: 'var(--surface2)', overflow: 'hidden', marginBottom: 16 }}>
+              <div style={{
+                height: '100%', borderRadius: 4,
+                width: `${Math.min((tokens.total / TOKEN_LIMIT) * 100, 100)}%`,
+                background: tokens.total / TOKEN_LIMIT > 0.8 ? '#f59e0b' : '#89d957',
+                transition: 'width 0.4s ease',
+              }} />
+            </div>
+            {/* Counters */}
+            <div style={{ display: 'flex', gap: 24 }}>
+              <div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginBottom: 2 }}>ENTRADA</div>
+                <div style={{ fontSize: 18, fontWeight: 700, fontFamily: 'var(--font-display)', color: '#89d957' }}>
+                  {tokens.input_tokens.toLocaleString('pt-BR')}
+                </div>
+              </div>
+              <div style={{ width: 1, background: 'var(--border)' }} />
+              <div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginBottom: 2 }}>SAÍDA</div>
+                <div style={{ fontSize: 18, fontWeight: 700, fontFamily: 'var(--font-display)', color: '#89d957' }}>
+                  {tokens.output_tokens.toLocaleString('pt-BR')}
+                </div>
+              </div>
+              <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginBottom: 2 }}>RESTANTE</div>
+                <div style={{ fontSize: 18, fontWeight: 700, fontFamily: 'var(--font-display)', color: 'var(--text-muted)' }}>
+                  {Math.max(TOKEN_LIMIT - tokens.total, 0).toLocaleString('pt-BR')}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Sessions table */}

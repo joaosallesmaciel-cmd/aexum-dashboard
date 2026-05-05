@@ -60,6 +60,7 @@ export default function Settings() {
   const [generatingKey, setGeneratingKey] = useState(false)
   const [keyCopied, setKeyCopied] = useState(false)
   const [webhookCopied, setWebhookCopied] = useState(false)
+  const [togglingActive, setTogglingActive] = useState(false)
 
   const WEBHOOK_URL = 'https://aexum.com.br/api/agent/webhook'
 
@@ -132,6 +133,20 @@ export default function Settings() {
     setTimeout(() => setSaved(false), 2000)
   }
 
+  async function toggleActive() {
+    setTogglingActive(true)
+    const next = !form.is_active
+    await fetch('/api/agent/config', {
+      method: hasConfig ? 'PATCH' : 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...form, is_active: next }),
+    })
+    set('is_active', next)
+    setHasConfig(true)
+    setTogglingActive(false)
+  }
+
   async function generateApiKey() {
     if (!newKeyName.trim()) return
     setGeneratingKey(true)
@@ -190,20 +205,22 @@ export default function Settings() {
               </p>
             </div>
             <button
-              onClick={() => set('is_active', !form.is_active)}
+              onClick={toggleActive}
+              disabled={togglingActive}
               style={{
                 display: 'flex', alignItems: 'center', gap: 8,
                 padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border)',
                 background: form.is_active ? 'rgba(141,198,63,0.1)' : 'var(--surface2)',
                 color: form.is_active ? '#8DC63F' : 'var(--text-muted)',
-                cursor: 'pointer', fontSize: 13, fontWeight: 500,
+                cursor: togglingActive ? 'wait' : 'pointer', fontSize: 13, fontWeight: 500,
+                opacity: togglingActive ? 0.7 : 1,
               }}
             >
               <div style={{
                 width: 8, height: 8, borderRadius: '50%',
                 background: form.is_active ? '#8DC63F' : 'var(--text-muted)',
               }} />
-              {form.is_active ? 'Agente ativo' : 'Agente inativo'}
+              {togglingActive ? 'Salvando...' : form.is_active ? 'Agente ativo' : 'Agente inativo'}
             </button>
           </div>
 
