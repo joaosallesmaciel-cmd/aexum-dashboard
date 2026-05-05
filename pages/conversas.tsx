@@ -70,19 +70,11 @@ export default function Conversas() {
       .eq('id', sessionId)
       .single()
 
-    if (!sessionData?.whatsapp_number) {
-      console.error('whatsapp_number não encontrado para sessionId:', sessionId)
-      return []
-    }
+    if (!sessionData?.whatsapp_number) return []
 
     const whatsappNumber = sessionData.whatsapp_number
-    console.log('[DEBUG] sessionId:', sessionId, '→ whatsappNumber:', whatsappNumber)
-
     const response = await fetch(`/api/chat-messages?whatsapp_number=${encodeURIComponent(whatsappNumber)}`, { credentials: 'include' })
     const json = await response.json()
-
-    console.log('[DEBUG] mensagens encontradas:', json.messages?.length, 'erro:', json.error)
-    console.log('[RAW]', JSON.stringify(json.messages?.slice(0, 3), null, 2))
 
     return json.messages || []
   }
@@ -110,7 +102,6 @@ export default function Conversas() {
         return true
       })
 
-      console.log('Mensagens carregadas:', deduped.map(m => ({ id: m.id, type: m.type, preview: m.content.substring(0, 30) })))
       setMessages(deduped)
     }).finally(() => setMsgLoading(false))
   }, [selected?.id])
