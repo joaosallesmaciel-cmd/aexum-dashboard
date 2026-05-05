@@ -124,7 +124,7 @@ export default function Login() {
 
             {/* Descrição */}
             <p style={{ fontSize: 15, color: 'var(--text-dim, #8a8a8a)', lineHeight: 1.7, margin: '0 0 36px', maxWidth: 420 }}>
-              Dashboards inteligentes, geração de conteúdo com IA e CRM unificados para agências que querem crescer sem contratar.
+              Atendente de IA para WhatsApp, CRM integrado e monitoramento de conversas para PMEs brasileiras.
             </p>
 
             {/* Bullets */}
