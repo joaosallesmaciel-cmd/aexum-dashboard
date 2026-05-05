@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // Get Z-API credentials
   const { data: config } = await supabase
     .from('agent_config')
-    .select('zapi_instance, zapi_token')
+    .select('zapi_instance, zapi_token, zapi_client_token')
     .eq('owner_id', user.id)
     .single()
 
@@ -34,20 +34,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // Send via Z-API
   try {
+    console.log('=== DEBUG Z-API ===')
+    console.log('CLIENT_TOKEN presente:', !!config.zapi_client_token)
+    console.log('CLIENT_TOKEN valor:', config.zapi_client_token?.substring(0, 8) + '...')
+    console.log('INSTANCE:', config.zapi_instance)
+
     const zapiRes = await fetch(
       `https://api.z-api.io/instances/${config.zapi_instance}/token/${config.zapi_token}/send-text`,
       {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Client-Token': config.zapi_client_token ?? '' },
         body: JSON.stringify({ phone: whatsapp_number, message }),
       }
     )
-    const zapiData = await zapiRes.json()
+    const responseText = await zapiRes.text()
+    console.log('Z-API status:', zapiRes.status)
+    console.log('Z-API response:', responseText)
+
+    const zapiData = JSON.parse(responseText)
     if (!zapiRes.ok) {
       return res.status(200).json({ saved: true, sent: false, error: zapiData })
     }
     return res.json({ saved: true, sent: true })
   } catch (err: any) {
+    console.error('[send-message] Z-API error:', err)
     return res.status(200).json({ saved: true, sent: false, error: err.message })
   }
 }
