@@ -3,7 +3,6 @@ import { useState, useEffect, useRef } from 'react'
 import Sidebar from '../components/Sidebar'
 import { useUser } from '../lib/AuthContext'
 import { faviconHref } from '../lib/favicons'
-import { PauseCircle, PlayCircle } from 'lucide-react'
 
 interface SessionItem {
   id: string
@@ -78,7 +77,6 @@ export default function Conversas() {
   const [selected, setSelected] = useState<SessionItem | null>(null)
   const [messages, setMessages] = useState<NormalizedMessage[]>([])
   const [msgLoading, setMsgLoading] = useState(false)
-  const [pausing, setPausing] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
 
   // Fetch sessions
@@ -159,24 +157,6 @@ export default function Conversas() {
       .subscribe()
     return () => { supabase.removeChannel(channel) }
   }, [user?.id, selected?.id])
-
-  // Toggle is_paused
-  async function togglePause() {
-    if (!selected || pausing) return
-    const next = !selected.is_paused
-    setPausing(true)
-    setSelected(s => s ? { ...s, is_paused: next } : s)
-    setSessions(prev => prev.map(s => s.id === selected.id ? { ...s, is_paused: next } : s))
-    const { error } = await supabase
-      .from('agent_sessions')
-      .update({ is_paused: next })
-      .eq('id', selected.id)
-    if (error) {
-      setSelected(s => s ? { ...s, is_paused: !next } : s)
-      setSessions(prev => prev.map(s => s.id === selected.id ? { ...s, is_paused: !next } : s))
-    }
-    setPausing(false)
-  }
 
   const filtered = sessions.filter(s => {
     const q = search.toLowerCase()
@@ -284,31 +264,10 @@ export default function Conversas() {
                 <div style={{ fontWeight: 700, fontSize: 15 }}>{displayName(selected)}</div>
                 <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{selected.whatsapp_number}</div>
               </div>
-              <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
-                <button
-                  onClick={togglePause}
-                  disabled={pausing}
-                  title={selected.is_paused ? 'Retomar agente' : 'Pausar agente'}
-                  style={{
-                    display: 'flex', alignItems: 'center', gap: 6,
-                    padding: '6px 12px', borderRadius: 7, border: '1px solid var(--border)',
-                    background: selected.is_paused ? 'rgba(251,191,36,0.1)' : 'var(--surface2)',
-                    color: selected.is_paused ? '#fbbf24' : 'var(--text-muted)',
-                    fontSize: 12, cursor: pausing ? 'not-allowed' : 'pointer',
-                    fontFamily: 'var(--font-body)', opacity: pausing ? 0.6 : 1,
-                    transition: 'all 0.15s',
-                  }}
-                >
-                  {selected.is_paused
-                    ? <><PlayCircle width={14} height={14} /> Retomar</>
-                    : <><PauseCircle width={14} height={14} /> Pausar</>
-                  }
-                </button>
-                <button
-                  onClick={() => setSelected(null)}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 20 }}
-                >×</button>
-              </div>
+              <button
+                onClick={() => setSelected(null)}
+                style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 20 }}
+              >×</button>
             </div>
 
             {/* Messages */}
