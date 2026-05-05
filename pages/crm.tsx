@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import { useState, useEffect, useCallback } from 'react'
 import { useUser } from '../lib/AuthContext'
 import Sidebar from '../components/Sidebar'
@@ -152,6 +153,10 @@ export default function CRM() {
   const [addingInteraction, setAddingInteraction] = useState(false)
   const [editStage, setEditStage] = useState<Stage>('lead')
   const [deleting, setDeleting] = useState(false)
+  const [noteText, setNoteText] = useState('')
+  const [noteSaved, setNoteSaved] = useState(false)
+  const [chatMessages, setChatMessages] = useState<{ id: number; type: string; content: string }[]>([])
+  const [chatLoading, setChatLoading] = useState(false)
 
   // ── Fetch ────────────────────────────────────────────────────────────────
   const fetchClients = useCallback(async () => {
@@ -176,9 +181,39 @@ export default function CRM() {
   // ── Drawer open/close ────────────────────────────────────────────────────
   function openDrawer(c: Client) {
     setSelectedClient(c); setEditStage(c.stage)
+    setNoteText(c.notes || '')
+    setNoteSaved(false)
+    setChatMessages([])
     fetchInteractions(c.id)
+    if (c.whatsapp) {
+      setChatLoading(true)
+      fetch(`/api/chat-messages?whatsapp_number=${encodeURIComponent(c.whatsapp)}`, { credentials: 'include' })
+        .then(r => r.json())
+        .then(d => {
+          const msgs = (d.messages || []).slice(-5)
+          setChatMessages(msgs.map((m: any) => ({
+            id: m.id,
+            type: m.message?.type ?? '',
+            content: m.message?.content ?? '',
+          })))
+        })
+        .finally(() => setChatLoading(false))
+    }
   }
-  function closeDrawer() { setSelectedClient(null); setInteractions([]) }
+  function closeDrawer() { setSelectedClient(null); setInteractions([]); setChatMessages([]) }
+
+  async function saveNote() {
+    if (!selectedClient) return
+    await fetch(`/api/clients/${selectedClient.id}`, {
+      method: 'PATCH', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ notes: noteText }),
+    })
+    setClients(prev => prev.map(c => c.id === selectedClient.id ? { ...c, notes: noteText } : c))
+    setSelectedClient(prev => prev ? { ...prev, notes: noteText } : prev)
+    setNoteSaved(true)
+    setTimeout(() => setNoteSaved(false), 2000)
+  }
 
   // ── Create ───────────────────────────────────────────────────────────────
   async function handleCreate() {
@@ -480,7 +515,7 @@ export default function CRM() {
                               {c.segment && <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 8 }}>{c.segment}</div>}
                               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexWrap: 'wrap' }}>
-                                  {c.contract_value ? <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>{fmt(c.contract_value)}</span> : null}
+                                  {c.contract_value ? <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: '#89d957' }}>{fmt(c.contract_value)}</span> : null}
                                   {c.origin ? <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 4, background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{ORIGIN_LABELS[c.origin] || c.origin}</span> : null}
                                 </div>
                                 {hasNext && (
@@ -621,14 +656,63 @@ export default function CRM() {
                         <span style={{ fontSize: 13, color: value ? 'var(--text)' : 'var(--text-muted)' }}>{value || '—'}</span>
                       </div>
                     ))}
-                    {selectedClient.notes && (
-                      <div>
-                        <span style={{ fontSize: 12, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', display: 'block', marginBottom: 4 }}>Notas:</span>
-                        <p style={{ fontSize: 13, margin: 0, lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>{selectedClient.notes}</p>
-                      </div>
-                    )}
                   </div>
                 </section>
+
+                {/* Notas */}
+                <section>
+                  <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: 10 }}>NOTAS</div>
+                  <textarea
+                    value={noteText}
+                    onChange={e => setNoteText(e.target.value)}
+                    rows={4}
+                    placeholder="Observações sobre este cliente..."
+                    style={{ width: '100%', background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 12px', fontSize: 13, color: 'var(--text)', fontFamily: 'var(--font-body)', resize: 'vertical', boxSizing: 'border-box', marginBottom: 8 }}
+                  />
+                  <button onClick={saveNote} style={{
+                    background: noteSaved ? 'rgba(137,217,87,0.15)' : '#89d957',
+                    color: noteSaved ? '#89d957' : '#000',
+                    border: noteSaved ? '1px solid #89d957' : 'none',
+                    borderRadius: 7, padding: '7px 16px', fontSize: 12, fontWeight: 700,
+                    cursor: 'pointer', fontFamily: 'var(--font-display)',
+                  }}>
+                    {noteSaved ? 'Salvo! ✓' : 'Salvar nota'}
+                  </button>
+                </section>
+
+                {/* Conversas */}
+                {selectedClient.whatsapp && (
+                  <section>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                      <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.08em' }}>CONVERSAS RECENTES</div>
+                      <Link href="/conversas" style={{ fontSize: 11, color: '#89d957', textDecoration: 'none', fontFamily: 'var(--font-mono)' }}>
+                        Ver completo →
+                      </Link>
+                    </div>
+                    {chatLoading ? (
+                      <div style={{ fontSize: 12, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>Carregando...</div>
+                    ) : chatMessages.length === 0 ? (
+                      <div style={{ fontSize: 12, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>Nenhuma mensagem encontrada.</div>
+                    ) : (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                        {chatMessages.map(m => {
+                          const isAi = m.type === 'ai'
+                          const rawContent = typeof m.content === 'string' ? m.content : ''
+                          return (
+                            <div key={m.id} style={{ background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 12px' }}>
+                              <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: isAi ? '#89d957' : 'var(--text-muted)', marginBottom: 3 }}>
+                                {isAi ? 'Bia' : 'Cliente'}
+                              </div>
+                              <div style={{ fontSize: 12, color: 'var(--text)', lineHeight: 1.4 }}>
+                                {rawContent.length > 80 ? rawContent.substring(0, 80) + '…' : rawContent}
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </section>
+                )}
 
                 {/* Move stage */}
                 <section style={{ background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 10, padding: 16 }}>
