@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { useState, useEffect, useCallback } from 'react'
+import { useUser } from '../lib/AuthContext'
 import Sidebar from '../components/Sidebar'
 import { faviconHref } from '../lib/favicons'
 
@@ -120,7 +121,14 @@ function EmptyState({ onNew }: { onNew: () => void }) {
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
+function fmtDatePT() {
+  return new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })
+}
+
 export default function CRM() {
+  const { user } = useUser()
+  const rawName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'usuário'
+  const displayName = rawName.charAt(0).toUpperCase() + rawName.slice(1)
   const [view, setView] = useState<'lista' | 'kanban'>('lista')
   const [clients, setClients] = useState<Client[]>([])
   const [loading, setLoading] = useState(true)
@@ -290,6 +298,27 @@ export default function CRM() {
         <Sidebar />
 
         <main style={{ flex: 1, padding: '48px 48px', minWidth: 0 }}>
+
+          {/* ── Welcome block ── */}
+          <div style={{ marginBottom: 36 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 12,
+              padding: '4px 12px', borderRadius: 20, border: '1px solid rgba(137,217,87,0.3)',
+              background: 'rgba(137,217,87,0.06)', fontSize: 11, fontFamily: 'var(--font-mono)', color: '#89d957' }}>
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#89d957',
+                boxShadow: '0 0 0 0 rgba(137,217,87,0.5)',
+                animation: 'pulse-dot 1.8s ease infinite', display: 'inline-block' }} />
+              ONLINE
+            </div>
+            <div style={{ fontSize: 12, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginBottom: 6 }}>
+              {fmtDatePT()}
+            </div>
+            <h1 style={{ fontSize: 28, fontWeight: 800, fontFamily: 'var(--font-display)', margin: 0, lineHeight: 1.1 }}>
+              Olá, {displayName} 👋
+            </h1>
+            <p style={{ margin: '6px 0 0', color: 'var(--text-muted)', fontSize: 13 }}>
+              Suas ferramentas de IA prontas para usar.
+            </p>
+          </div>
 
           {/* ── Header ── */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
@@ -674,6 +703,12 @@ export default function CRM() {
           </>
         )}
       </div>
+    <style>{`
+      @keyframes pulse-dot {
+        0%,100%{box-shadow:0 0 0 0 rgba(137,217,87,0.5)}
+        50%{box-shadow:0 0 0 6px rgba(137,217,87,0)}
+      }
+    `}</style>
     </>
   )
 }

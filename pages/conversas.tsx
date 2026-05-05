@@ -1,0 +1,303 @@
+import Head from 'next/head'
+import { useState, useEffect, useRef } from 'react'
+import Sidebar from '../components/Sidebar'
+import { useUser } from '../lib/AuthContext'
+import { faviconHref } from '../lib/favicons'
+
+interface SessionItem {
+  id: string
+  whatsapp_number: string
+  whatsapp_name: string | null
+  last_message_at: string | null
+  client_id: string | null
+  clients: { id: string; name: string } | null
+  last_message: { content: string; role: string; created_at: string } | null
+}
+
+interface Message {
+  id: string
+  session_id: string
+  role: string
+  content: string
+  created_at: string
+  input_tokens?: number
+  output_tokens?: number
+}
+
+function timeAgo(iso: string | null) {
+  if (!iso) return ''
+  const diff = Date.now() - new Date(iso).getTime()
+  const m = Math.floor(diff / 60000)
+  if (m < 1) return 'agora'
+  if (m < 60) return `há ${m} min`
+  const h = Math.floor(m / 60)
+  if (h < 24) return `há ${h}h`
+  return `há ${Math.floor(h / 24)}d`
+}
+
+function formatTime(iso: string) {
+  return new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+}
+
+export default function Conversas() {
+  const { user, supabase } = useUser()
+  const [sessions, setSessions] = useState<SessionItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState('')
+  const [selected, setSelected] = useState<SessionItem | null>(null)
+  const [messages, setMessages] = useState<Message[]>([])
+  const [msgLoading, setMsgLoading] = useState(false)
+  const [text, setText] = useState('')
+  const [sending, setSending] = useState(false)
+  const [sendError, setSendError] = useState('')
+  const bottomRef = useRef<HTMLDivElement>(null)
+
+  // Fetch sessions
+  useEffect(() => {
+    fetch('/api/conversas/sessions', { credentials: 'include' })
+      .then(r => r.json())
+      .then(d => { if (Array.isArray(d)) setSessions(d) })
+      .finally(() => setLoading(false))
+  }, [])
+
+  // Fetch messages when session selected
+  useEffect(() => {
+    if (!selected) return
+    setMessages([])
+    setMsgLoading(true)
+    fetch(`/api/agent/sessions/${selected.id}/messages`, { credentials: 'include' })
+      .then(r => r.json())
+      .then(d => { if (Array.isArray(d)) setMessages(d) })
+      .finally(() => setMsgLoading(false))
+  }, [selected?.id])
+
+  // Auto scroll
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
+  // Realtime
+  useEffect(() => {
+    if (!user) return
+    const channel = supabase
+      .channel('conversas_messages')
+      .on(
+        'postgres_changes' as any,
+        { event: 'INSERT', schema: 'public', table: 'agent_messages', filter: `owner_id=eq.${user.id}` },
+        (payload: any) => {
+          const msg = payload.new as Message
+          if (msg.session_id === selected?.id) {
+            setMessages(prev => [...prev, msg])
+          }
+          setSessions(prev => {
+            const updated = prev.map(s =>
+              s.id === msg.session_id
+                ? { ...s, last_message: msg, last_message_at: msg.created_at }
+                : s
+            )
+            return [...updated].sort((a, b) =>
+              new Date(b.last_message_at || 0).getTime() - new Date(a.last_message_at || 0).getTime()
+            )
+          })
+        }
+      )
+      .subscribe()
+    return () => { supabase.removeChannel(channel) }
+  }, [user?.id, selected?.id])
+
+  const filtered = sessions.filter(s => {
+    const q = search.toLowerCase()
+    return (
+      (s.whatsapp_name || '').toLowerCase().includes(q) ||
+      (s.whatsapp_number || '').includes(q) ||
+      (s.clients?.name || '').toLowerCase().includes(q)
+    )
+  })
+
+  async function sendMessage() {
+    if (!text.trim() || !selected || sending) return
+    setSending(true)
+    setSendError('')
+    const optimistic: Message = {
+      id: `opt-${Date.now()}`,
+      session_id: selected.id,
+      role: 'human',
+      content: text.trim(),
+      created_at: new Date().toISOString(),
+    }
+    setMessages(prev => [...prev, optimistic])
+    const body = text.trim()
+    setText('')
+    const res = await fetch('/api/send-message', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: selected.id, message: body, whatsapp_number: selected.whatsapp_number }),
+    })
+    const data = await res.json()
+    if (!data.sent && data.error) {
+      setSendError(typeof data.error === 'string' ? data.error : 'Erro ao enviar via Z-API (salvo no banco)')
+    }
+    setSending(false)
+  }
+
+  const displayName = (s: SessionItem) => s.whatsapp_name || s.clients?.name || s.whatsapp_number
+
+  return (
+    <div style={{ display: 'flex', height: '100vh', background: 'var(--bg)', color: 'var(--text)', overflow: 'hidden' }}>
+      <Head>
+        <title>Conversas — Aexum</title>
+        <link rel="icon" type="image/svg+xml" href={faviconHref('dashboard')} />
+      </Head>
+      <Sidebar />
+
+      {/* LEFT PANEL */}
+      <div style={{
+        width: '30%', minWidth: 260, maxWidth: 380,
+        borderRight: '1px solid var(--border)',
+        display: 'flex', flexDirection: 'column', height: '100vh',
+      }}>
+        <div style={{ padding: '20px 16px 12px', borderBottom: '1px solid var(--border)' }}>
+          <div style={{ fontSize: 18, fontWeight: 800, fontFamily: 'var(--font-display)', marginBottom: 12 }}>Conversas</div>
+          <input
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Buscar por nome ou número..."
+            style={{
+              width: '100%', padding: '8px 12px', borderRadius: 8, fontSize: 12,
+              background: 'var(--surface2)', border: '1px solid var(--border)',
+              color: 'var(--text)', outline: 'none', boxSizing: 'border-box',
+              fontFamily: 'var(--font-body)',
+            }}
+          />
+        </div>
+
+        <div style={{ flex: 1, overflowY: 'auto' }}>
+          {loading ? (
+            <div style={{ padding: 24, color: 'var(--text-muted)', fontSize: 13 }}>Carregando...</div>
+          ) : filtered.length === 0 ? (
+            <div style={{ padding: 24, color: 'var(--text-muted)', fontSize: 13 }}>Nenhuma conversa encontrada.</div>
+          ) : filtered.map(s => (
+            <div
+              key={s.id}
+              onClick={() => setSelected(s)}
+              style={{
+                padding: '12px 16px', cursor: 'pointer', borderBottom: '1px solid var(--border)',
+                background: selected?.id === s.id ? 'rgba(137,217,87,0.07)' : 'transparent',
+                borderLeft: selected?.id === s.id ? '3px solid #89d957' : '3px solid transparent',
+                transition: 'background 0.1s',
+              }}
+              onMouseEnter={e => { if (selected?.id !== s.id) e.currentTarget.style.background = 'var(--surface)' }}
+              onMouseLeave={e => { if (selected?.id !== s.id) e.currentTarget.style.background = 'transparent' }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
+                <div style={{ fontWeight: 600, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '70%' }}>
+                  {displayName(s)}
+                </div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  {timeAgo(s.last_message_at)}
+                </div>
+              </div>
+              <div style={{ fontSize: 12, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {s.last_message
+                  ? `${s.last_message.role === 'assistant' ? '🤖 ' : ''}${s.last_message.content}`
+                  : s.whatsapp_number}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* RIGHT PANEL */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100vh', minWidth: 0 }}>
+        {!selected ? (
+          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 12 }}>
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--border)" strokeWidth="1.5">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <div style={{ color: 'var(--text-muted)', fontSize: 14 }}>Selecione uma conversa para visualizar</div>
+          </div>
+        ) : (
+          <>
+            {/* Header */}
+            <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 12, flexShrink: 0 }}>
+              <div>
+                <div style={{ fontWeight: 700, fontSize: 15 }}>{displayName(selected)}</div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{selected.whatsapp_number}</div>
+              </div>
+              <button
+                onClick={() => setSelected(null)}
+                style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 20 }}
+              >×</button>
+            </div>
+
+            {/* Messages */}
+            <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {msgLoading ? (
+                <div style={{ color: 'var(--text-muted)', fontSize: 13 }}>Carregando mensagens...</div>
+              ) : messages.length === 0 ? (
+                <div style={{ color: 'var(--text-muted)', fontSize: 13 }}>Nenhuma mensagem nesta conversa.</div>
+              ) : messages.map(m => {
+                const isAssistant = m.role === 'assistant'
+                const isHuman = m.role === 'human'
+                return (
+                  <div key={m.id} style={{ display: 'flex', justifyContent: isAssistant || isHuman ? (isHuman ? 'flex-end' : 'flex-end') : 'flex-start' }}>
+                    <div style={{
+                      maxWidth: '72%', padding: '8px 12px',
+                      borderRadius: isAssistant || isHuman ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
+                      background: isAssistant ? '#89d957' : isHuman ? '#c5eb2d' : 'var(--surface2)',
+                      color: isAssistant || isHuman ? '#0e0e0e' : 'var(--text)',
+                      fontSize: 13, lineHeight: 1.5,
+                    }}>
+                      {m.content}
+                      <div style={{ fontSize: 10, opacity: 0.6, marginTop: 4, textAlign: 'right' }}>
+                        {formatTime(m.created_at)}
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+              <div ref={bottomRef} />
+            </div>
+
+            {/* Send area */}
+            <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border)', flexShrink: 0 }}>
+              {sendError && (
+                <div style={{ fontSize: 11, color: '#f59e0b', marginBottom: 6, fontFamily: 'var(--font-mono)' }}>
+                  ⚠ {sendError}
+                </div>
+              )}
+              <div style={{ display: 'flex', gap: 8 }}>
+                <input
+                  value={text}
+                  onChange={e => setText(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage() } }}
+                  placeholder="Digite uma mensagem como humano..."
+                  disabled={sending}
+                  style={{
+                    flex: 1, padding: '10px 14px', borderRadius: 8, fontSize: 13,
+                    background: 'var(--surface2)', border: '1px solid var(--border)',
+                    color: 'var(--text)', outline: 'none', fontFamily: 'var(--font-body)',
+                  }}
+                />
+                <button
+                  onClick={sendMessage}
+                  disabled={!text.trim() || sending}
+                  style={{
+                    padding: '10px 20px', borderRadius: 8, border: 'none',
+                    background: '#89d957', color: '#0e0e0e',
+                    fontSize: 13, fontWeight: 700, cursor: 'pointer',
+                    opacity: !text.trim() || sending ? 0.5 : 1,
+                    fontFamily: 'var(--font-display)',
+                  }}
+                >
+                  {sending ? '...' : 'Enviar'}
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}

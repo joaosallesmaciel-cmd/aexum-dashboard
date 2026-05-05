@@ -3,20 +3,9 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useUser } from '../lib/AuthContext'
+import { Bot, MessageSquare } from 'lucide-react'
 
 const nav = [
-  {
-    label: 'Dashboard',
-    href: '/',
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
-        <rect x="1" y="1" width="6" height="6" rx="1.5"/>
-        <rect x="9" y="1" width="6" height="6" rx="1.5"/>
-        <rect x="1" y="9" width="6" height="6" rx="1.5"/>
-        <rect x="9" y="9" width="6" height="6" rx="1.5"/>
-      </svg>
-    ),
-  },
   {
     label: 'CRM',
     href: '/crm',
@@ -29,18 +18,14 @@ const nav = [
     ),
   },
   {
+    label: 'Conversas',
+    href: '/conversas',
+    icon: <MessageSquare width={16} height={16} />,
+  },
+  {
     label: 'Agente',
     href: '/agent',
-    icon: (
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 8V4H8"/>
-        <rect width="16" height="12" x="4" y="8" rx="2"/>
-        <path d="M2 14h2"/>
-        <path d="M20 14h2"/>
-        <path d="M15 13v2"/>
-        <path d="M9 13v2"/>
-      </svg>
-    ),
+    icon: <Bot width={16} height={16} />,
   },
   {
     label: 'Configurações',

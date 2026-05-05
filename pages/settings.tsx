@@ -134,17 +134,23 @@ export default function Settings() {
   }
 
   async function toggleActive() {
-    setTogglingActive(true)
     const next = !form.is_active
-    await fetch('/api/agent/config', {
-      method: hasConfig ? 'PATCH' : 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...form, is_active: next }),
-    })
-    set('is_active', next)
-    setHasConfig(true)
-    setTogglingActive(false)
+    set('is_active', next) // optimistic
+    setTogglingActive(true)
+    try {
+      const res = await fetch('/api/agent/config', {
+        method: hasConfig ? 'PATCH' : 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...form, is_active: next }),
+      })
+      if (!res.ok) throw new Error('Erro ao salvar')
+      setHasConfig(true)
+    } catch {
+      set('is_active', !next) // revert
+    } finally {
+      setTogglingActive(false)
+    }
   }
 
   async function generateApiKey() {
