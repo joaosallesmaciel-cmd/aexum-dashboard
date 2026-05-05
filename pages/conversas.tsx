@@ -15,12 +15,10 @@ interface SessionItem {
   last_message: { content: string; role: string; created_at: string } | null
 }
 
-type NormalizedMessage = {
-  id: string
-  role: 'user' | 'assistant' | 'human'
+type ChatMessage = {
+  id: number
+  type: 'human' | 'ai'
   content: string
-  timestamp: string | null
-  source: 'agent_messages' | 'agent_chat_memory'
 }
 
 function timeAgo(iso: string | null) {
@@ -34,48 +32,13 @@ function timeAgo(iso: string | null) {
   return `há ${Math.floor(h / 24)}d`
 }
 
-function formatTime(iso: string | null) {
-  if (!iso) return null
-  return new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
-}
-
-function mergeMessages(
-  agentMsgs: any[],
-  memoryMsgs: any[]
-): NormalizedMessage[] {
-  const fromAgent: NormalizedMessage[] = agentMsgs.map(r => ({
-    id: r.id,
-    role: r.role as 'user' | 'human',
-    content: r.content,
-    timestamp: r.created_at,
-    source: 'agent_messages',
-  }))
-
-  const fromMemory: NormalizedMessage[] = memoryMsgs.map(r => ({
-    id: 'memory-' + r.id,
-    role: (r.message?.role ?? 'assistant') as 'assistant',
-    content: r.message?.content ?? '',
-    timestamp: null,
-    source: 'agent_chat_memory',
-  }))
-
-  // Interleave: each agent message is followed by the corresponding memory message
-  const result: NormalizedMessage[] = []
-  const maxLen = Math.max(fromAgent.length, fromMemory.length)
-  for (let i = 0; i < maxLen; i++) {
-    if (fromAgent[i]) result.push(fromAgent[i])
-    if (fromMemory[i]) result.push(fromMemory[i])
-  }
-  return result
-}
-
 export default function Conversas() {
   const { user, supabase } = useUser()
   const [sessions, setSessions] = useState<SessionItem[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState<SessionItem | null>(null)
-  const [messages, setMessages] = useState<NormalizedMessage[]>([])
+  const [messages, setMessages] = useState<ChatMessage[]>([])
   const [msgLoading, setMsgLoading] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
 
@@ -87,30 +50,26 @@ export default function Conversas() {
       .finally(() => setLoading(false))
   }, [])
 
-  // Fetch messages from both tables when session selected
+  // Fetch messages from agent_chat_memory using whatsapp_number
   useEffect(() => {
     if (!selected) return
     setMessages([])
     setMsgLoading(true)
 
-    Promise.all([
-      supabase
-        .from('agent_messages')
-        .select('id, role, content, created_at')
-        .eq('session_id', selected.id)
-        .order('created_at', { ascending: true }),
-      supabase
-        .from('agent_chat_memory')
-        .select('id, session_id, message')
-        .eq('session_id', selected.id)
-        .order('id', { ascending: true }),
-    ]).then(([messagesResult, memoryResult]) => {
-      const merged = mergeMessages(
-        messagesResult.data ?? [],
-        memoryResult.data ?? []
-      )
-      setMessages(merged)
-    }).finally(() => setMsgLoading(false))
+    supabase
+      .from('agent_chat_memory')
+      .select('id, message')
+      .eq('session_id', selected.whatsapp_number)
+      .order('id', { ascending: true })
+      .then(({ data }) => {
+        const normalized: ChatMessage[] = (data ?? []).map((r: any) => ({
+          id: r.id,
+          type: r.message?.type as 'human' | 'ai',
+          content: r.message?.content ?? '',
+        }))
+        setMessages(normalized)
+      })
+      .finally(() => setMsgLoading(false))
   }, [selected?.id])
 
   // Auto scroll
@@ -118,45 +77,40 @@ export default function Conversas() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // Realtime — update session list on new messages
+  // Realtime — listen to agent_chat_memory for new messages
   useEffect(() => {
-    if (!user) return
+    if (!selected) return
     const channel = supabase
-      .channel('conversas_sessions')
+      .channel(`chat_memory_${selected.whatsapp_number}`)
       .on(
         'postgres_changes' as any,
-        { event: 'INSERT', schema: 'public', table: 'agent_messages', filter: `owner_id=eq.${user.id}` },
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'agent_chat_memory',
+          filter: `session_id=eq.${selected.whatsapp_number}`,
+        },
         (payload: any) => {
-          const msg = payload.new
-          setSessions(prev => {
-            const updated = prev.map(s =>
-              s.id === msg.session_id
-                ? { ...s, last_message: msg, last_message_at: msg.created_at }
+          const r = payload.new
+          const msg: ChatMessage = {
+            id: r.id,
+            type: r.message?.type,
+            content: r.message?.content ?? '',
+          }
+          setMessages(prev => [...prev, msg])
+          // Update session list preview
+          setSessions(prev =>
+            prev.map(s =>
+              s.whatsapp_number === selected.whatsapp_number
+                ? { ...s, last_message: { content: msg.content, role: msg.type, created_at: new Date().toISOString() }, last_message_at: new Date().toISOString() }
                 : s
             )
-            return [...updated].sort((a, b) =>
-              new Date(b.last_message_at || 0).getTime() - new Date(a.last_message_at || 0).getTime()
-            )
-          })
-          // Refresh messages if this session is open
-          if (msg.session_id === selected?.id) {
-            setMessages(prev => {
-              const norm: NormalizedMessage = {
-                id: msg.id,
-                role: msg.role,
-                content: msg.content,
-                timestamp: msg.created_at,
-                source: 'agent_messages',
-              }
-              if (prev.some(m => m.id === norm.id)) return prev
-              return [...prev, norm]
-            })
-          }
+          )
         }
       )
       .subscribe()
     return () => { supabase.removeChannel(channel) }
-  }, [user?.id, selected?.id])
+  }, [selected?.id])
 
   const filtered = sessions.filter(s => {
     const q = search.toLowerCase()
@@ -169,10 +123,9 @@ export default function Conversas() {
 
   const displayName = (s: SessionItem) => s.whatsapp_name || s.clients?.name || s.whatsapp_number
 
-  function msgStyle(role: string): { align: 'flex-start' | 'flex-end'; bg: string; color: string; label: string } {
-    if (role === 'user') return { align: 'flex-start', bg: '#1a1a1a', color: '#ffffff', label: 'Cliente' }
-    if (role === 'assistant') return { align: 'flex-end', bg: '#89d957', color: '#000000', label: 'Bia' }
-    return { align: 'flex-end', bg: '#2a5298', color: '#ffffff', label: 'Você' }
+  function msgStyle(type: 'human' | 'ai'): { align: 'flex-start' | 'flex-end'; bg: string; color: string; label: string } {
+    if (type === 'human') return { align: 'flex-start', bg: '#1a1a1a', color: '#ffffff', label: 'Cliente' }
+    return { align: 'flex-end', bg: '#89d957', color: '#000000', label: 'Bia' }
   }
 
   return (
@@ -226,20 +179,13 @@ export default function Conversas() {
                 <div style={{ fontWeight: 600, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '70%' }}>
                   {displayName(s)}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-                  {s.is_paused && (
-                    <span style={{ fontSize: 10, background: 'rgba(251,191,36,0.15)', color: '#fbbf24', padding: '1px 6px', borderRadius: 4, fontFamily: 'var(--font-mono)' }}>
-                      ⏸ pausado
-                    </span>
-                  )}
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
-                    {timeAgo(s.last_message_at)}
-                  </div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  {timeAgo(s.last_message_at)}
                 </div>
               </div>
               <div style={{ fontSize: 12, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {s.last_message
-                  ? `${s.last_message.role === 'assistant' ? '🤖 ' : ''}${s.last_message.content}`
+                  ? s.last_message.content.slice(0, 40)
                   : s.whatsapp_number}
               </div>
             </div>
@@ -285,8 +231,7 @@ export default function Conversas() {
               ) : messages.length === 0 ? (
                 <div style={{ color: 'var(--text-muted)', fontSize: 13 }}>Nenhuma mensagem ainda nesta conversa.</div>
               ) : messages.map(m => {
-                const { align, bg, color, label } = msgStyle(m.role)
-                const time = formatTime(m.timestamp)
+                const { align, bg, color, label } = msgStyle(m.type)
                 return (
                   <div key={m.id} style={{ display: 'flex', flexDirection: 'column', alignItems: align }}>
                     <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 3, fontFamily: 'var(--font-mono)' }}>
@@ -300,11 +245,6 @@ export default function Conversas() {
                       fontSize: 13, lineHeight: 1.5,
                     }}>
                       {m.content}
-                      {time && (
-                        <div style={{ fontSize: 10, opacity: 0.5, marginTop: 4, textAlign: 'right' }}>
-                          {time}
-                        </div>
-                      )}
                     </div>
                   </div>
                 )
