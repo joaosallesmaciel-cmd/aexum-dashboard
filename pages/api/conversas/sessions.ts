@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const [{ data: sessions }, { data: lastMsgs }] = await Promise.all([
     supabase
       .from('agent_sessions')
-      .select('id, whatsapp_number, whatsapp_name, last_message_at, client_id, clients(id, name)')
+      .select('id, whatsapp_number, whatsapp_name, last_message_at, client_id, is_paused, clients(id, name)')
       .eq('owner_id', user.id)
       .order('last_message_at', { ascending: false }),
     supabase

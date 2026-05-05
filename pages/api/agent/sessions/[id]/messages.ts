@@ -18,13 +18,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .single()
     if (sessionError || !session) return res.status(404).json({ error: 'Sessão não encontrada' })
 
-    const { data, error } = await supabase
-      .from('agent_messages')
-      .select('*')
-      .eq('session_id', id)
-      .order('created_at', { ascending: true })
-    if (error) return res.status(500).json({ error: error.message })
-    return res.status(200).json(data)
+    const [{ data: agentMsgs }, { data: memoryMsgs }] = await Promise.all([
+      supabase
+        .from('agent_messages')
+        .select('id, session_id, role, content, created_at, input_tokens, output_tokens')
+        .eq('session_id', id)
+        .order('created_at', { ascending: true }),
+      supabase
+        .from('agent_chat_memory')
+        .select('id, session_id, message, created_at')
+        .eq('session_id', id)
+        .order('created_at', { ascending: true }),
+    ])
+
+    const fromMemory = (memoryMsgs ?? []).map((r: any) => ({
+      id: `mem-${r.id}`,
+      session_id: r.session_id,
+      role: r.message?.role ?? 'assistant',
+      content: r.message?.content ?? '',
+      created_at: r.created_at,
+    }))
+
+    const all = [...(agentMsgs ?? []), ...fromMemory]
+    all.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+
+    return res.status(200).json(all)
   }
 
   return res.status(405).json({ error: 'Método não permitido' })

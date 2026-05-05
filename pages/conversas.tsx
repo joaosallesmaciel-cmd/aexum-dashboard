@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import Sidebar from '../components/Sidebar'
 import { useUser } from '../lib/AuthContext'
 import { faviconHref } from '../lib/favicons'
+import { PauseCircle, PlayCircle } from 'lucide-react'
 
 interface SessionItem {
   id: string
@@ -10,18 +11,17 @@ interface SessionItem {
   whatsapp_name: string | null
   last_message_at: string | null
   client_id: string | null
+  is_paused: boolean
   clients: { id: string; name: string } | null
   last_message: { content: string; role: string; created_at: string } | null
 }
 
-interface Message {
+type NormalizedMessage = {
   id: string
-  session_id: string
-  role: string
+  role: 'user' | 'assistant' | 'human'
   content: string
-  created_at: string
-  input_tokens?: number
-  output_tokens?: number
+  timestamp: string | null
+  source: 'agent_messages' | 'agent_chat_memory'
 }
 
 function timeAgo(iso: string | null) {
@@ -35,8 +35,39 @@ function timeAgo(iso: string | null) {
   return `há ${Math.floor(h / 24)}d`
 }
 
-function formatTime(iso: string) {
+function formatTime(iso: string | null) {
+  if (!iso) return null
   return new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+}
+
+function mergeMessages(
+  agentMsgs: any[],
+  memoryMsgs: any[]
+): NormalizedMessage[] {
+  const fromAgent: NormalizedMessage[] = agentMsgs.map(r => ({
+    id: r.id,
+    role: r.role as 'user' | 'human',
+    content: r.content,
+    timestamp: r.created_at,
+    source: 'agent_messages',
+  }))
+
+  const fromMemory: NormalizedMessage[] = memoryMsgs.map(r => ({
+    id: 'memory-' + r.id,
+    role: (r.message?.role ?? 'assistant') as 'assistant',
+    content: r.message?.content ?? '',
+    timestamp: null,
+    source: 'agent_chat_memory',
+  }))
+
+  // Interleave: each agent message is followed by the corresponding memory message
+  const result: NormalizedMessage[] = []
+  const maxLen = Math.max(fromAgent.length, fromMemory.length)
+  for (let i = 0; i < maxLen; i++) {
+    if (fromAgent[i]) result.push(fromAgent[i])
+    if (fromMemory[i]) result.push(fromMemory[i])
+  }
+  return result
 }
 
 export default function Conversas() {
@@ -45,11 +76,9 @@ export default function Conversas() {
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState<SessionItem | null>(null)
-  const [messages, setMessages] = useState<Message[]>([])
+  const [messages, setMessages] = useState<NormalizedMessage[]>([])
   const [msgLoading, setMsgLoading] = useState(false)
-  const [text, setText] = useState('')
-  const [sending, setSending] = useState(false)
-  const [sendError, setSendError] = useState('')
+  const [pausing, setPausing] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
 
   // Fetch sessions
@@ -60,15 +89,30 @@ export default function Conversas() {
       .finally(() => setLoading(false))
   }, [])
 
-  // Fetch messages when session selected
+  // Fetch messages from both tables when session selected
   useEffect(() => {
     if (!selected) return
     setMessages([])
     setMsgLoading(true)
-    fetch(`/api/agent/sessions/${selected.id}/messages`, { credentials: 'include' })
-      .then(r => r.json())
-      .then(d => { if (Array.isArray(d)) setMessages(d) })
-      .finally(() => setMsgLoading(false))
+
+    Promise.all([
+      supabase
+        .from('agent_messages')
+        .select('id, role, content, created_at')
+        .eq('session_id', selected.id)
+        .order('created_at', { ascending: true }),
+      supabase
+        .from('agent_chat_memory')
+        .select('id, session_id, message')
+        .eq('session_id', selected.id)
+        .order('id', { ascending: true }),
+    ]).then(([messagesResult, memoryResult]) => {
+      const merged = mergeMessages(
+        messagesResult.data ?? [],
+        memoryResult.data ?? []
+      )
+      setMessages(merged)
+    }).finally(() => setMsgLoading(false))
   }, [selected?.id])
 
   // Auto scroll
@@ -76,19 +120,16 @@ export default function Conversas() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // Realtime
+  // Realtime — update session list on new messages
   useEffect(() => {
     if (!user) return
     const channel = supabase
-      .channel('conversas_messages')
+      .channel('conversas_sessions')
       .on(
         'postgres_changes' as any,
         { event: 'INSERT', schema: 'public', table: 'agent_messages', filter: `owner_id=eq.${user.id}` },
         (payload: any) => {
-          const msg = payload.new as Message
-          if (msg.session_id === selected?.id) {
-            setMessages(prev => [...prev, msg])
-          }
+          const msg = payload.new
           setSessions(prev => {
             const updated = prev.map(s =>
               s.id === msg.session_id
@@ -99,11 +140,43 @@ export default function Conversas() {
               new Date(b.last_message_at || 0).getTime() - new Date(a.last_message_at || 0).getTime()
             )
           })
+          // Refresh messages if this session is open
+          if (msg.session_id === selected?.id) {
+            setMessages(prev => {
+              const norm: NormalizedMessage = {
+                id: msg.id,
+                role: msg.role,
+                content: msg.content,
+                timestamp: msg.created_at,
+                source: 'agent_messages',
+              }
+              if (prev.some(m => m.id === norm.id)) return prev
+              return [...prev, norm]
+            })
+          }
         }
       )
       .subscribe()
     return () => { supabase.removeChannel(channel) }
   }, [user?.id, selected?.id])
+
+  // Toggle is_paused
+  async function togglePause() {
+    if (!selected || pausing) return
+    const next = !selected.is_paused
+    setPausing(true)
+    setSelected(s => s ? { ...s, is_paused: next } : s)
+    setSessions(prev => prev.map(s => s.id === selected.id ? { ...s, is_paused: next } : s))
+    const { error } = await supabase
+      .from('agent_sessions')
+      .update({ is_paused: next })
+      .eq('id', selected.id)
+    if (error) {
+      setSelected(s => s ? { ...s, is_paused: !next } : s)
+      setSessions(prev => prev.map(s => s.id === selected.id ? { ...s, is_paused: !next } : s))
+    }
+    setPausing(false)
+  }
 
   const filtered = sessions.filter(s => {
     const q = search.toLowerCase()
@@ -114,34 +187,13 @@ export default function Conversas() {
     )
   })
 
-  async function sendMessage() {
-    if (!text.trim() || !selected || sending) return
-    setSending(true)
-    setSendError('')
-    const optimistic: Message = {
-      id: `opt-${Date.now()}`,
-      session_id: selected.id,
-      role: 'human',
-      content: text.trim(),
-      created_at: new Date().toISOString(),
-    }
-    setMessages(prev => [...prev, optimistic])
-    const body = text.trim()
-    setText('')
-    const res = await fetch('/api/send-message', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ session_id: selected.id, message: body, whatsapp_number: selected.whatsapp_number }),
-    })
-    const data = await res.json()
-    if (!data.sent && data.error) {
-      setSendError(typeof data.error === 'string' ? data.error : 'Erro ao enviar via Z-API (salvo no banco)')
-    }
-    setSending(false)
-  }
-
   const displayName = (s: SessionItem) => s.whatsapp_name || s.clients?.name || s.whatsapp_number
+
+  function msgStyle(role: string): { align: 'flex-start' | 'flex-end'; bg: string; color: string; label: string } {
+    if (role === 'user') return { align: 'flex-start', bg: '#1a1a1a', color: '#ffffff', label: 'Cliente' }
+    if (role === 'assistant') return { align: 'flex-end', bg: '#89d957', color: '#000000', label: 'Bia' }
+    return { align: 'flex-end', bg: '#2a5298', color: '#ffffff', label: 'Você' }
+  }
 
   return (
     <div style={{ display: 'flex', height: '100vh', background: 'var(--bg)', color: 'var(--text)', overflow: 'hidden' }}>
@@ -194,8 +246,15 @@ export default function Conversas() {
                 <div style={{ fontWeight: 600, fontSize: 13, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '70%' }}>
                   {displayName(s)}
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                  {timeAgo(s.last_message_at)}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+                  {s.is_paused && (
+                    <span style={{ fontSize: 10, background: 'rgba(251,191,36,0.15)', color: '#fbbf24', padding: '1px 6px', borderRadius: 4, fontFamily: 'var(--font-mono)' }}>
+                      ⏸ pausado
+                    </span>
+                  )}
+                  <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
+                    {timeAgo(s.last_message_at)}
+                  </div>
                 </div>
               </div>
               <div style={{ fontSize: 12, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -225,75 +284,73 @@ export default function Conversas() {
                 <div style={{ fontWeight: 700, fontSize: 15 }}>{displayName(selected)}</div>
                 <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{selected.whatsapp_number}</div>
               </div>
-              <button
-                onClick={() => setSelected(null)}
-                style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 20 }}
-              >×</button>
+              <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <button
+                  onClick={togglePause}
+                  disabled={pausing}
+                  title={selected.is_paused ? 'Retomar agente' : 'Pausar agente'}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 6,
+                    padding: '6px 12px', borderRadius: 7, border: '1px solid var(--border)',
+                    background: selected.is_paused ? 'rgba(251,191,36,0.1)' : 'var(--surface2)',
+                    color: selected.is_paused ? '#fbbf24' : 'var(--text-muted)',
+                    fontSize: 12, cursor: pausing ? 'not-allowed' : 'pointer',
+                    fontFamily: 'var(--font-body)', opacity: pausing ? 0.6 : 1,
+                    transition: 'all 0.15s',
+                  }}
+                >
+                  {selected.is_paused
+                    ? <><PlayCircle width={14} height={14} /> Retomar</>
+                    : <><PauseCircle width={14} height={14} /> Pausar</>
+                  }
+                </button>
+                <button
+                  onClick={() => setSelected(null)}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', fontSize: 20 }}
+                >×</button>
+              </div>
             </div>
 
             {/* Messages */}
-            <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
               {msgLoading ? (
-                <div style={{ color: 'var(--text-muted)', fontSize: 13 }}>Carregando mensagens...</div>
+                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{
+                    width: 28, height: 28, borderRadius: '50%',
+                    border: '3px solid var(--border)',
+                    borderTopColor: '#89d957',
+                    animation: 'spin 0.7s linear infinite',
+                  }} />
+                  <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
+                </div>
               ) : messages.length === 0 ? (
-                <div style={{ color: 'var(--text-muted)', fontSize: 13 }}>Nenhuma mensagem nesta conversa.</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: 13 }}>Nenhuma mensagem ainda nesta conversa.</div>
               ) : messages.map(m => {
-                const isAssistant = m.role === 'assistant'
-                const isHuman = m.role === 'human'
+                const { align, bg, color, label } = msgStyle(m.role)
+                const time = formatTime(m.timestamp)
                 return (
-                  <div key={m.id} style={{ display: 'flex', justifyContent: isAssistant || isHuman ? (isHuman ? 'flex-end' : 'flex-end') : 'flex-start' }}>
+                  <div key={m.id} style={{ display: 'flex', flexDirection: 'column', alignItems: align }}>
+                    <div style={{ fontSize: 10, color: 'var(--text-muted)', marginBottom: 3, fontFamily: 'var(--font-mono)' }}>
+                      {label}
+                    </div>
                     <div style={{
                       maxWidth: '72%', padding: '8px 12px',
-                      borderRadius: isAssistant || isHuman ? '12px 12px 2px 12px' : '12px 12px 12px 2px',
-                      background: isAssistant ? '#89d957' : isHuman ? '#c5eb2d' : 'var(--surface2)',
-                      color: isAssistant || isHuman ? '#0e0e0e' : 'var(--text)',
+                      borderRadius: align === 'flex-start' ? '2px 12px 12px 12px' : '12px 2px 12px 12px',
+                      background: bg,
+                      color,
                       fontSize: 13, lineHeight: 1.5,
                     }}>
                       {m.content}
-                      <div style={{ fontSize: 10, opacity: 0.6, marginTop: 4, textAlign: 'right' }}>
-                        {formatTime(m.created_at)}
-                      </div>
+                      {time && (
+                        <div style={{ fontSize: 10, opacity: 0.5, marginTop: 4, textAlign: 'right' }}>
+                          {time}
+                        </div>
+                      )}
                     </div>
                   </div>
                 )
               })}
               <div ref={bottomRef} />
-            </div>
-
-            {/* Send area */}
-            <div style={{ padding: '12px 16px', borderTop: '1px solid var(--border)', flexShrink: 0 }}>
-              {sendError && (
-                <div style={{ fontSize: 11, color: '#f59e0b', marginBottom: 6, fontFamily: 'var(--font-mono)' }}>
-                  ⚠ {sendError}
-                </div>
-              )}
-              <div style={{ display: 'flex', gap: 8 }}>
-                <input
-                  value={text}
-                  onChange={e => setText(e.target.value)}
-                  onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage() } }}
-                  placeholder="Digite uma mensagem como humano..."
-                  disabled={sending}
-                  style={{
-                    flex: 1, padding: '10px 14px', borderRadius: 8, fontSize: 13,
-                    background: 'var(--surface2)', border: '1px solid var(--border)',
-                    color: 'var(--text)', outline: 'none', fontFamily: 'var(--font-body)',
-                  }}
-                />
-                <button
-                  onClick={sendMessage}
-                  disabled={!text.trim() || sending}
-                  style={{
-                    padding: '10px 20px', borderRadius: 8, border: 'none',
-                    background: '#89d957', color: '#0e0e0e',
-                    fontSize: 13, fontWeight: 700, cursor: 'pointer',
-                    opacity: !text.trim() || sending ? 0.5 : 1,
-                    fontFamily: 'var(--font-display)',
-                  }}
-                >
-                  {sending ? '...' : 'Enviar'}
-                </button>
-              </div>
             </div>
           </>
         )}
