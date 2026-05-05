@@ -78,16 +78,13 @@ export default function Conversas() {
     const whatsappNumber = sessionData.whatsapp_number
     console.log('[DEBUG] sessionId:', sessionId, '→ whatsappNumber:', whatsappNumber)
 
-    const { data: messages, error } = await supabase
-      .from('agent_chat_memory')
-      .select('id, message')
-      .eq('session_id', whatsappNumber)
-      .order('id', { ascending: true })
+    const response = await fetch(`/api/chat-messages?whatsapp_number=${encodeURIComponent(whatsappNumber)}`, { credentials: 'include' })
+    const json = await response.json()
 
-    console.log('[DEBUG] mensagens encontradas:', messages?.length, 'erro:', error)
-    console.log('[RAW]', JSON.stringify(messages?.slice(0, 3), null, 2))
+    console.log('[DEBUG] mensagens encontradas:', json.messages?.length, 'erro:', json.error)
+    console.log('[RAW]', JSON.stringify(json.messages?.slice(0, 3), null, 2))
 
-    return messages || []
+    return json.messages || []
   }
 
   // Fetch messages from agent_chat_memory using whatsapp_number via agent_sessions
