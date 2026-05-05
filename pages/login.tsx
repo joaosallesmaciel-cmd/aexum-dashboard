@@ -10,9 +10,9 @@ const supabase = createBrowserClient(
 )
 
 const bullets = [
-  'Posts para Instagram gerados por IA',
+  'Atendente de IA no WhatsApp, 24/7',
   'CRM com funil de vendas visual',
-  'Identidade de marca centralizada',
+  'Monitoramento de conversas em tempo real',
 ]
 
 export default function Login() {

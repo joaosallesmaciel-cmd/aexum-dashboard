@@ -8,15 +8,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!user) return
 
   const supabase = createAdminSupabaseClient()
-  const { data, error } = await supabase
+  const { count, error } = await supabase
     .from('agent_messages')
-    .select('input_tokens, output_tokens')
+    .select('*', { count: 'exact', head: true })
     .eq('owner_id', user.id)
 
   if (error) return res.status(500).json({ error: error.message })
 
-  const input_tokens = (data ?? []).reduce((sum, r) => sum + (r.input_tokens ?? 0), 0)
-  const output_tokens = (data ?? []).reduce((sum, r) => sum + (r.output_tokens ?? 0), 0)
-
-  res.json({ input_tokens, output_tokens, total: input_tokens + output_tokens })
+  res.json({ count: count ?? 0 })
 }
