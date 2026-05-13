@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useUser } from '../lib/AuthContext'
-import { Bot, MessageSquare } from 'lucide-react'
+import { Bot, MessageSquare, BookOpen } from 'lucide-react'
 
 const nav = [
   {
@@ -21,6 +21,11 @@ const nav = [
     label: 'Conversas',
     href: '/conversas',
     icon: <MessageSquare width={16} height={16} />,
+  },
+  {
+    label: 'Conhecimento',
+    href: '/conhecimento',
+    icon: <BookOpen width={16} height={16} />,
   },
   {
     label: 'Agente',
