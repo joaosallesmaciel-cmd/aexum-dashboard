@@ -94,7 +94,6 @@ type ChatMsg = { role: 'user' | 'bia'; text: string }
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function LandingPage() {
   const router = useRouter()
-  const [authChecked, setAuthChecked] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [visibleMsgs, setVisibleMsgs] = useState(0)
@@ -105,19 +104,18 @@ export default function LandingPage() {
   const [chatLoading, setChatLoading] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
 
+  // Redirecionar usuários já logados silenciosamente, sem bloquear a landing
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       if (data.user) router.replace('/crm')
-      else setAuthChecked(true)
     })
   }, [router])
 
   useEffect(() => {
-    if (!authChecked) return
     let i = 0
     const t = setInterval(() => { i++; setVisibleMsgs(i); if (i >= HERO_MSGS.length) clearInterval(t) }, 1200)
     return () => clearInterval(t)
-  }, [authChecked])
+  }, [])
 
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [chatMsgs])
 
@@ -141,8 +139,6 @@ export default function LandingPage() {
       setChatLoading(false)
     }
   }
-
-  if (!authChecked) return null
 
   return (
     <>
