@@ -7,7 +7,8 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const cookieStore = cookies()
   const { createServerClient } = await import('@supabase/ssr')
   const supabase = createServerClient(
@@ -21,7 +22,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   const { error } = await supabaseAdmin
     .from('api_keys')
     .update({ is_active: false })
-    .eq('id', params.id)
+    .eq('id', id)
     .eq('owner_id', user.id)
 
   if (error) return NextResponse.json({ error: 'Erro ao revogar chave' }, { status: 500 })
