@@ -39,8 +39,8 @@ export default function Login() {
   }
 
   const inputStyle = (field: string): React.CSSProperties => ({
-    background: 'rgba(255,255,255,0.05)',
-    border: `1px solid ${focusedField === field ? 'var(--accent)' : 'rgba(255,255,255,0.1)'}`,
+    background: 'rgba(255,255,255,0.06)',
+    border: `1px solid ${focusedField === field ? '#c5eb2d' : 'rgba(255,255,255,0.12)'}`,
     borderRadius: 8,
     padding: '12px 14px',
     color: 'var(--text)',
@@ -94,8 +94,8 @@ export default function Login() {
         </svg>
 
         {/* Gradientes radiais */}
-        <div style={{ position: 'absolute', top: -200, right: -200, width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,240,96,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', bottom: -150, left: -150, width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(200,240,96,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: -200, right: -200, width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle, rgba(197,235,45,0.12) 0%, transparent 70%)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', bottom: -150, left: -150, width: 400, height: 400, borderRadius: '50%', background: 'radial-gradient(circle, rgba(197,235,45,0.07) 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 800, height: 800, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 60%)', pointerEvents: 'none' }} />
 
         {/* Split layout */}
@@ -108,7 +108,7 @@ export default function Login() {
               <div style={{
                 fontFamily: "'Astera', sans-serif",
                 fontSize: 48,
-                color: '#8DC63F',
+                color: '#c5eb2d',
                 letterSpacing: '0.6em',
                 lineHeight: 1,
                 fontWeight: 'normal',
@@ -145,9 +145,9 @@ export default function Login() {
 
           {/* Coluna direita — card de login */}
           <div className="right-col" style={{ width: 400, flexShrink: 0 }}>
-            <div style={{ position: 'relative', background: 'rgba(22,22,22,0.85)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)', border: '1px solid rgba(200,240,96,0.15)', borderRadius: 20, padding: 40, boxShadow: '0 0 0 1px rgba(200,240,96,0.05), 0 32px 64px rgba(0,0,0,0.5)' }}>
+            <div style={{ position: 'relative', background: 'rgba(22,22,22,0.85)', backdropFilter: 'blur(40px)', WebkitBackdropFilter: 'blur(40px)', border: '1px solid rgba(197,235,45,0.15)', borderRadius: 20, padding: 40, boxShadow: '0 0 0 1px rgba(197,235,45,0.05), 0 32px 64px rgba(0,0,0,0.5)' }}>
               {/* Brilho topo */}
-              <div style={{ position: 'absolute', top: 0, left: '10%', right: '10%', height: 1, background: 'linear-gradient(90deg, transparent, rgba(200,240,96,0.4), transparent)', borderRadius: '20px 20px 0 0' }} />
+              <div style={{ position: 'absolute', top: 0, left: '10%', right: '10%', height: 1, background: 'linear-gradient(90deg, transparent, rgba(197,235,45,0.4), transparent)', borderRadius: '20px 20px 0 0' }} />
 
               {/* Título */}
               <div style={{ marginBottom: 28 }}>
@@ -194,8 +194,8 @@ export default function Login() {
                   type="submit"
                   disabled={loading}
                   style={{
-                    background: loading ? 'rgba(200,240,96,0.6)' : 'var(--accent)',
-                    color: '#0e0e0e',
+                    background: loading ? 'rgba(197,235,45,0.6)' : 'var(--accent)',
+                    color: '#000000',
                     border: 'none',
                     borderRadius: 8,
                     padding: '13px 16px',

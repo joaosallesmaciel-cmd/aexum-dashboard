@@ -14,7 +14,7 @@ const emptyForm = {
   target_audience: '',
   tone_of_voice: 'profissional',
   visual: {
-    palette: { primary: '#161616', secondary: '#c8f060', accent: '#f0c060', text: '#f0ece4' },
+    palette: { primary: '#161616', secondary: '#c5eb2d', accent: '#f0c060', text: '#f0ece4' },
     typography: { display: '', body: '' },
     graphic_style: 'minimalista',
     recurring_elements: '',
@@ -159,7 +159,7 @@ export default function BrandsPage() {
               <button
                 onClick={() => { setShowForm(true); setError('') }}
                 style={{
-                  background: 'var(--accent)', color: '#0e0e0e', border: 'none',
+                  background: 'var(--accent)', color: '#000000', border: 'none',
                   borderRadius: 6, padding: '10px 20px', fontSize: 13,
                   fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-body)',
                   letterSpacing: '0.01em',
@@ -439,7 +439,7 @@ export default function BrandsPage() {
                 disabled={saving}
                 style={{
                   flex: 2, background: saving ? 'var(--border2)' : 'var(--accent)',
-                  color: saving ? 'var(--text-muted)' : '#0e0e0e',
+                  color: saving ? 'var(--text-muted)' : '#000000',
                   border: 'none', borderRadius: 6, padding: '12px',
                   fontSize: 14, fontWeight: 600, cursor: saving ? 'not-allowed' : 'pointer',
                   fontFamily: 'var(--font-body)',

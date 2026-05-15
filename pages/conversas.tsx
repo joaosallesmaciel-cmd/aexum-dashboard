@@ -163,7 +163,7 @@ export default function Conversas() {
 
   function msgStyle(type: string): { align: 'flex-start' | 'flex-end'; bg: string; color: string; label: string } {
     if (type === 'human') return { align: 'flex-start', bg: '#1a1a1a', color: '#ffffff', label: 'Cliente' }
-    if (type === 'ai') return { align: 'flex-end', bg: '#89d957', color: '#000000', label: 'Bia' }
+    if (type === 'ai') return { align: 'flex-end', bg: '#c5eb2d', color: '#000000', label: 'Bia' }
     return { align: 'flex-end', bg: '#2a5298', color: '#ffffff', label: 'Você' }
   }
 
@@ -207,8 +207,8 @@ export default function Conversas() {
               onClick={() => setSelected(s)}
               style={{
                 padding: '12px 16px', cursor: 'pointer', borderBottom: '1px solid var(--border)',
-                background: selected?.id === s.id ? 'rgba(137,217,87,0.07)' : 'transparent',
-                borderLeft: selected?.id === s.id ? '3px solid #89d957' : '3px solid transparent',
+                background: selected?.id === s.id ? 'rgba(197,235,45,0.07)' : 'transparent',
+                borderLeft: selected?.id === s.id ? '3px solid #c5eb2d' : '3px solid transparent',
                 transition: 'background 0.1s',
               }}
               onMouseEnter={e => { if (selected?.id !== s.id) e.currentTarget.style.background = 'var(--surface)' }}
@@ -262,7 +262,7 @@ export default function Conversas() {
                   <div style={{
                     width: 28, height: 28, borderRadius: '50%',
                     border: '3px solid var(--border)',
-                    borderTopColor: '#89d957',
+                    borderTopColor: '#c5eb2d',
                     animation: 'spin 0.7s linear infinite',
                   }} />
                   <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>

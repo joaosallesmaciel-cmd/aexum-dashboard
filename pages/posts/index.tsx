@@ -555,7 +555,7 @@ Use essas referências para orientar o layout e composição dos slides.` : ''}`
                   style={{
                     width: '100%', marginTop: '16px', padding: '13px',
                     background: loading ? 'var(--border2)' : 'var(--accent)',
-                    color: loading ? 'var(--text-muted)' : '#0e0e0e',
+                    color: loading ? 'var(--text-muted)' : '#000000',
                     border: 'none', borderRadius: '6px',
                     fontSize: '13px', fontWeight: '700',
                     fontFamily: 'var(--font-display)',
@@ -656,7 +656,7 @@ Use essas referências para orientar o layout e composição dos slides.` : ''}`
                             style={{
                               padding: '8px 14px', borderRadius: '6px', fontSize: '12px',
                               background: !scheduledAt || scheduling ? 'var(--border2)' : '#06b6d4',
-                              color: !scheduledAt || scheduling ? 'var(--text-muted)' : '#0e0e0e',
+                              color: !scheduledAt || scheduling ? 'var(--text-muted)' : '#000000',
                               border: 'none', cursor: !scheduledAt || scheduling ? 'not-allowed' : 'pointer',
                               fontFamily: 'var(--font-mono)', fontWeight: 600, whiteSpace: 'nowrap',
                             }}
@@ -682,7 +682,7 @@ Use essas referências para orientar o layout e composição dos slides.` : ''}`
                                 width: '22px', height: '22px', borderRadius: '4px', border: '1px solid',
                                 borderColor: i === currentSlide ? 'var(--accent)' : 'var(--border2)',
                                 background: i === currentSlide ? 'var(--accent)' : 'transparent',
-                                color: i === currentSlide ? '#0e0e0e' : 'var(--text-muted)',
+                                color: i === currentSlide ? '#000000' : 'var(--text-muted)',
                                 fontSize: '10px', cursor: 'pointer', fontFamily: 'var(--font-mono)',
                               }}>{i + 1}</button>
                             ))}
@@ -791,9 +791,9 @@ Use essas referências para orientar o layout e composição dos slides.` : ''}`
                         {output.hashtags.map((tag, i) => (
                           <span key={i} style={{
                             fontSize: '11px', padding: '3px 8px',
-                            background: 'rgba(200,240,96,0.06)', borderRadius: '10px',
+                            background: 'rgba(197,235,45,0.06)', borderRadius: '10px',
                             color: 'var(--accent)', fontFamily: 'var(--font-mono)',
-                            border: '1px solid rgba(200,240,96,0.12)',
+                            border: '1px solid rgba(197,235,45,0.12)',
                           }}>
                             {tag.startsWith('#') ? tag : '#' + tag}
                           </span>

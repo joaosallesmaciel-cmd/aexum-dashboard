@@ -217,14 +217,14 @@ export default function Settings() {
                 display: 'flex', alignItems: 'center', gap: 8,
                 padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border)',
                 background: form.is_active ? 'rgba(141,198,63,0.1)' : 'var(--surface2)',
-                color: form.is_active ? '#8DC63F' : 'var(--text-muted)',
+                color: form.is_active ? '#c5eb2d' : 'var(--text-muted)',
                 cursor: togglingActive ? 'wait' : 'pointer', fontSize: 13, fontWeight: 500,
                 opacity: togglingActive ? 0.7 : 1,
               }}
             >
               <div style={{
                 width: 8, height: 8, borderRadius: '50%',
-                background: form.is_active ? '#8DC63F' : 'var(--text-muted)',
+                background: form.is_active ? '#c5eb2d' : 'var(--text-muted)',
               }} />
               {togglingActive ? 'Salvando...' : form.is_active ? 'Agente ativo' : 'Agente inativo'}
             </button>
@@ -317,7 +317,7 @@ export default function Settings() {
                               padding: '6px 14px', borderRadius: 20, border: '1px solid',
                               borderColor: active ? 'var(--accent)' : 'var(--border)',
                               background: active ? 'rgba(141,198,63,0.1)' : 'transparent',
-                              color: active ? '#8DC63F' : 'var(--text-muted)',
+                              color: active ? '#c5eb2d' : 'var(--text-muted)',
                               fontSize: 12, cursor: 'pointer', fontWeight: active ? 600 : 400,
                             }}
                           >
@@ -368,7 +368,7 @@ export default function Settings() {
                         disabled={generatingKey || !newKeyName.trim()}
                         style={{
                           padding: '10px 14px', borderRadius: 8, border: 'none',
-                          background: 'var(--accent)', color: '#0e0e0e',
+                          background: 'var(--accent)', color: '#000000',
                           fontSize: 12, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap',
                         }}
                       >
@@ -381,14 +381,14 @@ export default function Settings() {
                           <input
                             readOnly
                             value={generatedKey}
-                            style={{ ...inputStyle, flex: 1, fontFamily: 'var(--font-mono)', fontSize: 11, background: '#0e0e0e', color: '#8DC63F', letterSpacing: '0.04em' }}
+                            style={{ ...inputStyle, flex: 1, fontFamily: 'var(--font-mono)', fontSize: 11, background: '#000000', color: '#c5eb2d', letterSpacing: '0.04em' }}
                           />
                           <button
                             onClick={() => copyText(generatedKey, setKeyCopied)}
                             style={{
                               padding: '10px 14px', borderRadius: 8, border: '1px solid var(--border)',
                               background: keyCopied ? 'rgba(141,198,63,0.1)' : 'var(--surface2)',
-                              color: keyCopied ? '#8DC63F' : 'var(--text-muted)',
+                              color: keyCopied ? '#c5eb2d' : 'var(--text-muted)',
                               cursor: 'pointer', fontSize: 12, whiteSpace: 'nowrap',
                             }}
                           >
@@ -439,7 +439,7 @@ export default function Settings() {
                         style={{
                           padding: '10px 14px', borderRadius: 8, border: '1px solid var(--border)',
                           background: webhookCopied ? 'rgba(141,198,63,0.1)' : 'var(--surface2)',
-                          color: webhookCopied ? '#8DC63F' : 'var(--text-muted)',
+                          color: webhookCopied ? '#c5eb2d' : 'var(--text-muted)',
                           cursor: 'pointer', fontSize: 12, whiteSpace: 'nowrap',
                         }}
                       >
@@ -504,7 +504,7 @@ export default function Settings() {
                         style={{
                           padding: '10px 16px', borderRadius: 8, border: '1px solid var(--border)',
                           background: webhookCopied ? 'rgba(141,198,63,0.1)' : 'var(--surface2)',
-                          color: webhookCopied ? '#8DC63F' : 'var(--text-muted)',
+                          color: webhookCopied ? '#c5eb2d' : 'var(--text-muted)',
                           cursor: 'pointer', fontSize: 12, whiteSpace: 'nowrap',
                         }}
                       >
@@ -533,7 +533,7 @@ export default function Settings() {
                       disabled={generatingKey || !newKeyName.trim()}
                       style={{
                         padding: '10px 16px', borderRadius: 8, border: 'none',
-                        background: 'var(--accent)', color: '#0e0e0e',
+                        background: 'var(--accent)', color: '#000000',
                         fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap',
                       }}
                     >
@@ -544,8 +544,8 @@ export default function Settings() {
                   {/* Generated key display */}
                   {generatedKey && (
                     <div style={{ marginBottom: 24, padding: 16, borderRadius: 10, background: 'var(--bg)', border: '1px solid var(--border)' }}>
-                      <div style={{ padding: '8px 12px', borderRadius: 6, background: '#0e0e0e', marginBottom: 10 }}>
-                        <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: '#8DC63F', wordBreak: 'break-all', letterSpacing: '0.04em' }}>
+                      <div style={{ padding: '8px 12px', borderRadius: 6, background: '#000000', marginBottom: 10 }}>
+                        <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: '#c5eb2d', wordBreak: 'break-all', letterSpacing: '0.04em' }}>
                           {generatedKey}
                         </div>
                       </div>
@@ -558,7 +558,7 @@ export default function Settings() {
                           style={{
                             padding: '6px 14px', borderRadius: 6, border: 'none',
                             background: keyCopied ? 'rgba(141,198,63,0.15)' : 'var(--surface2)',
-                            color: keyCopied ? '#8DC63F' : 'var(--text-muted)',
+                            color: keyCopied ? '#c5eb2d' : 'var(--text-muted)',
                             cursor: 'pointer', fontSize: 12,
                           }}
                         >
@@ -611,7 +611,7 @@ export default function Settings() {
                     style={{
                       padding: '10px 24px', borderRadius: 8, border: 'none',
                       background: saved ? 'rgba(141,198,63,0.15)' : 'var(--accent)',
-                      color: saved ? '#8DC63F' : '#0e0e0e',
+                      color: saved ? '#c5eb2d' : '#000000',
                       fontSize: 13, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer',
                       fontFamily: 'var(--font-display)', transition: 'all 0.2s',
                     }}

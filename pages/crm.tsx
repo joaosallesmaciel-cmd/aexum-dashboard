@@ -114,7 +114,7 @@ function EmptyState({ onNew }: { onNew: () => void }) {
       <div style={{ fontSize: 32, marginBottom: 12 }}>👥</div>
       <div style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, marginBottom: 6 }}>Nenhum cliente ainda</div>
       <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 20 }}>Adicione seu primeiro cliente para começar a gerenciar o funil.</p>
-      <button onClick={onNew} style={{ background: 'var(--accent)', color: '#0e0e0e', border: 'none', borderRadius: 8, padding: '9px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-display)' }}>
+      <button onClick={onNew} style={{ background: 'var(--accent)', color: '#000000', border: 'none', borderRadius: 8, padding: '9px 20px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: 'var(--font-display)' }}>
         + Novo Cliente
       </button>
     </div>
@@ -339,10 +339,10 @@ export default function CRM() {
           {/* ── Welcome block ── */}
           <div style={{ marginBottom: 36 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 12,
-              padding: '4px 12px', borderRadius: 20, border: '1px solid rgba(137,217,87,0.3)',
-              background: 'rgba(137,217,87,0.06)', fontSize: 11, fontFamily: 'var(--font-mono)', color: '#89d957' }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#89d957',
-                boxShadow: '0 0 0 0 rgba(137,217,87,0.5)',
+              padding: '4px 12px', borderRadius: 20, border: '1px solid rgba(197,235,45,0.3)',
+              background: 'rgba(197,235,45,0.06)', fontSize: 11, fontFamily: 'var(--font-mono)', color: '#c5eb2d' }}>
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#c5eb2d',
+                boxShadow: '0 0 0 0 rgba(197,235,45,0.5)',
                 animation: 'pulse-dot 1.8s ease infinite', display: 'inline-block' }} />
               ONLINE
             </div>
@@ -377,7 +377,7 @@ export default function CRM() {
                 ))}
               </div>
               <button onClick={() => setModalOpen(true)} style={{
-                background: 'var(--accent)', color: '#0e0e0e', border: 'none',
+                background: 'var(--accent)', color: '#000000', border: 'none',
                 borderRadius: 8, padding: '8px 18px', fontSize: 13, fontWeight: 700,
                 cursor: 'pointer', fontFamily: 'var(--font-display)',
               }}>+ Novo Cliente</button>
@@ -517,7 +517,7 @@ export default function CRM() {
                               {c.segment && <div style={{ fontSize: 11, color: 'var(--text-muted)', marginBottom: 8 }}>{c.segment}</div>}
                               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexWrap: 'wrap' }}>
-                                  {c.contract_value ? <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: '#89d957' }}>{fmt(c.contract_value)}</span> : null}
+                                  {c.contract_value ? <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: '#c5eb2d' }}>{fmt(c.contract_value)}</span> : null}
                                   {c.origin ? <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 4, background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{ORIGIN_LABELS[c.origin] || c.origin}</span> : null}
                                 </div>
                                 {hasNext && (
@@ -556,7 +556,7 @@ export default function CRM() {
                     <button key={t} onClick={() => setForm(f => ({ ...f, type: t }))} style={{
                       padding: '6px 20px', fontSize: 12, fontFamily: 'var(--font-mono)', border: 'none', cursor: 'pointer',
                       background: form.type === t ? 'var(--accent)' : 'transparent',
-                      color: form.type === t ? '#0e0e0e' : 'var(--text-muted)',
+                      color: form.type === t ? '#000000' : 'var(--text-muted)',
                       fontWeight: form.type === t ? 700 : 400,
                     }}>{t.toUpperCase()}</button>
                   ))}
@@ -602,7 +602,7 @@ export default function CRM() {
                   Cancelar
                 </button>
                 <button onClick={handleCreate} disabled={saving || !form.name.trim()} style={{
-                  background: 'var(--accent)', color: '#0e0e0e', border: 'none',
+                  background: 'var(--accent)', color: '#000000', border: 'none',
                   borderRadius: 8, padding: '9px 24px', fontSize: 13, fontWeight: 700,
                   cursor: saving ? 'wait' : 'pointer', opacity: saving || !form.name.trim() ? 0.6 : 1,
                   fontFamily: 'var(--font-display)',
@@ -672,9 +672,9 @@ export default function CRM() {
                     style={{ width: '100%', background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 12px', fontSize: 13, color: 'var(--text)', fontFamily: 'var(--font-body)', resize: 'vertical', boxSizing: 'border-box', marginBottom: 8 }}
                   />
                   <button onClick={saveNote} style={{
-                    background: noteSaved ? 'rgba(137,217,87,0.15)' : '#89d957',
-                    color: noteSaved ? '#89d957' : '#000',
-                    border: noteSaved ? '1px solid #89d957' : 'none',
+                    background: noteSaved ? 'rgba(197,235,45,0.15)' : '#c5eb2d',
+                    color: noteSaved ? '#c5eb2d' : '#000',
+                    border: noteSaved ? '1px solid #c5eb2d' : 'none',
                     borderRadius: 7, padding: '7px 16px', fontSize: 12, fontWeight: 700,
                     cursor: 'pointer', fontFamily: 'var(--font-display)',
                   }}>
@@ -687,7 +687,7 @@ export default function CRM() {
                   <section>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
                       <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.08em' }}>CONVERSAS RECENTES</div>
-                      <Link href="/conversas" style={{ fontSize: 11, color: '#89d957', textDecoration: 'none', fontFamily: 'var(--font-mono)' }}>
+                      <Link href="/conversas" style={{ fontSize: 11, color: '#c5eb2d', textDecoration: 'none', fontFamily: 'var(--font-mono)' }}>
                         Ver completo →
                       </Link>
                     </div>
@@ -702,7 +702,7 @@ export default function CRM() {
                           const rawContent = typeof m.content === 'string' ? m.content : ''
                           return (
                             <div key={m.id} style={{ background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 12px' }}>
-                              <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: isAi ? '#89d957' : 'var(--text-muted)', marginBottom: 3 }}>
+                              <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: isAi ? '#c5eb2d' : 'var(--text-muted)', marginBottom: 3 }}>
                                 {isAi ? 'Bia' : 'Cliente'}
                               </div>
                               <div style={{ fontSize: 12, color: 'var(--text)', lineHeight: 1.4 }}>
@@ -725,7 +725,7 @@ export default function CRM() {
                       {STAGE_ORDER.map(s => <option key={s} value={s}>{STAGE_LABELS[s]}</option>)}
                     </select>
                     <button onClick={handleUpdateStage} disabled={editStage === selectedClient.stage} style={{
-                      background: 'var(--accent)', color: '#0e0e0e', border: 'none',
+                      background: 'var(--accent)', color: '#000000', border: 'none',
                       borderRadius: 7, padding: '7px 14px', fontSize: 12, fontWeight: 700,
                       cursor: editStage === selectedClient.stage ? 'default' : 'pointer',
                       opacity: editStage === selectedClient.stage ? 0.5 : 1,
@@ -748,7 +748,7 @@ export default function CRM() {
                       placeholder="Descreva a interação..." rows={2}
                       style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 6, padding: '7px 10px', fontSize: 13, color: 'var(--text)', fontFamily: 'var(--font-body)', resize: 'none', boxSizing: 'border-box', marginBottom: 8 }} />
                     <button onClick={handleAddInteraction} disabled={addingInteraction || !newInteraction.content.trim()} style={{
-                      background: 'var(--accent)', color: '#0e0e0e', border: 'none',
+                      background: 'var(--accent)', color: '#000000', border: 'none',
                       borderRadius: 6, padding: '6px 14px', fontSize: 12, fontWeight: 700,
                       cursor: 'pointer', opacity: addingInteraction || !newInteraction.content.trim() ? 0.6 : 1,
                     }}>{addingInteraction ? 'Adicionando...' : '+ Adicionar'}</button>
@@ -791,8 +791,8 @@ export default function CRM() {
       </div>
     <style>{`
       @keyframes pulse-dot {
-        0%,100%{box-shadow:0 0 0 0 rgba(137,217,87,0.5)}
-        50%{box-shadow:0 0 0 6px rgba(137,217,87,0)}
+        0%,100%{box-shadow:0 0 0 0 rgba(197,235,45,0.5)}
+        50%{box-shadow:0 0 0 6px rgba(197,235,45,0)}
       }
     `}</style>
     </>

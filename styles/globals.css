@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @font-face {
   font-family: 'Astera';
@@ -14,18 +14,23 @@
 }
 
 :root {
-  --bg: #0e0e0e;
-  --surface: #161616;
-  --surface2: #1f1f1f;
-  --border: #2a2a2a;
-  --border2: #333;
-  --text: #f0ece4;
-  --text-muted: #6b6b6b;
-  --text-dim: #999;
-  --accent: #c8f060;
-  --accent2: #f0c060;
-  --font-display: 'Syne', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface2: #f5f5f5;
+  --border: rgba(197,235,45,0.3);
+  --border2: rgba(197,235,45,0.5);
+  --text: #000000;
+  --text-muted: #666666;
+  --text-dim: #999999;
+  --accent: #c5eb2d;
+  --accent-hover: #d4f53c;
+  --accent2: #a8cc1a;
+  --sidebar-bg: #000000;
+  --sidebar-text: #c5eb2d;
+  --sidebar-text-muted: rgba(197,235,45,0.5);
+  --sidebar-border: rgba(197,235,45,0.15);
+  --font-display: 'Montserrat', sans-serif;
+  --font-body: 'Montserrat', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
@@ -42,12 +47,12 @@ a { color: inherit; text-decoration: none; }
 
 ::selection {
   background: var(--accent);
-  color: #0e0e0e;
+  color: #000000;
 }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: rgba(197,235,45,0.3); border-radius: 3px; }
 
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(16px); }
@@ -58,19 +63,37 @@ a { color: inherit; text-decoration: none; }
   to { transform: rotate(360deg); }
 }
 
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
 .fade-up {
   animation: fadeUp 0.4s ease forwards;
 }
 
 body.light {
-  --bg: #f5f5f0;
+  --bg: #ffffff;
   --surface: #ffffff;
-  --surface2: #ebebE6;
-  --border: #e0e0d8;
-  --border2: #ccccC4;
-  --text: #0e0e0e;
-  --text-muted: #6b6b6b;
-  --text-dim: #888;
-  --accent: #5a9e00;
-  --accent2: #c8a000;
+  --surface2: #f5f5f5;
+  --border: rgba(197,235,45,0.3);
+  --border2: rgba(197,235,45,0.5);
+  --text: #000000;
+  --text-muted: #666666;
+  --text-dim: #999999;
+  --accent: #c5eb2d;
+  --accent-hover: #d4f53c;
+}
+
+body.dark {
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --surface2: #1a1a1a;
+  --border: rgba(197,235,45,0.2);
+  --border2: rgba(197,235,45,0.35);
+  --text: #ffffff;
+  --text-muted: #888888;
+  --text-dim: #666666;
+  --accent: #c5eb2d;
+  --accent-hover: #d4f53c;
 }

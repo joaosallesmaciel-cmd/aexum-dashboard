@@ -177,7 +177,7 @@ export default function AgentPage() {
             <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 16 }}>Mensagens processadas</div>
             <div>
               <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginBottom: 4 }}>TOTAL PROCESSADO</div>
-              <div style={{ fontSize: 32, fontWeight: 800, fontFamily: 'var(--font-display)', color: '#89d957' }}>
+              <div style={{ fontSize: 32, fontWeight: 800, fontFamily: 'var(--font-display)', color: '#c5eb2d' }}>
                 {msgCount.toLocaleString('pt-BR')}
               </div>
             </div>
