@@ -1,12 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { useRouter } from 'next/router'
 import Head from 'next/head'
-import { createBrowserClient } from '@supabase/ssr'
-
-const supabase = createBrowserClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const PLANS = [
@@ -93,7 +86,6 @@ type ChatMsg = { role: 'user' | 'bia'; text: string }
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function LandingPage() {
-  const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [visibleMsgs, setVisibleMsgs] = useState(0)
@@ -103,13 +95,6 @@ export default function LandingPage() {
   const [chatInput, setChatInput] = useState('')
   const [chatLoading, setChatLoading] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
-
-  // Redirecionar usuários já logados silenciosamente, sem bloquear a landing
-  useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) router.replace('/crm')
-    })
-  }, [router])
 
   useEffect(() => {
     let i = 0
