@@ -27,15 +27,18 @@ export async function proxy(request: NextRequest) {
 
   const { data: { session } } = await supabase.auth.getSession()
 
-  const isAuthPage = request.nextUrl.pathname.startsWith('/login') ||
-    request.nextUrl.pathname.startsWith('/register')
+  const isPublicPage =
+    request.nextUrl.pathname === '/' ||
+    request.nextUrl.pathname.startsWith('/login') ||
+    request.nextUrl.pathname.startsWith('/register') ||
+    request.nextUrl.pathname.startsWith('/confirm-email')
 
-  if (!session && !isAuthPage) {
+  if (!session && !isPublicPage) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  if (session && isAuthPage) {
-    return NextResponse.redirect(new URL('/', request.url))
+  if (session && (request.nextUrl.pathname.startsWith('/login') || request.nextUrl.pathname.startsWith('/register'))) {
+    return NextResponse.redirect(new URL('/crm', request.url))
   }
 
   return response
