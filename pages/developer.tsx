@@ -61,7 +61,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={() => { navigator.clipboard.writeText(text); setCopied(true); setTimeout(() => setCopied(false), 2000) }}
-      style={{ fontSize: 11, padding: '2px 8px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--surface2)', color: 'var(--text-muted)', cursor: 'pointer' }}
+      style={{ fontSize: 11, padding: '2px 8px', borderRadius: 6, border: '1px solid #e5e5e5', background: 'var(--surface2)', color: 'var(--text-muted)', cursor: 'pointer' }}
     >
       {copied ? '✓ Copiado' : 'Copiar'}
     </button>
@@ -137,10 +137,10 @@ function ApiKeysTab() {
       </div>
 
       {/* Tabela */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
-            <tr style={{ borderBottom: '1px solid var(--border)' }}>
+            <tr style={{ borderBottom: '1px solid #e5e5e5' }}>
               {['Nome', 'Prefixo', 'Status', 'Último uso', 'Criada em', ''].map(h => (
                 <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', fontWeight: 500 }}>{h}</th>
               ))}
@@ -152,7 +152,7 @@ function ApiKeysTab() {
             ) : keys.length === 0 ? (
               <tr><td colSpan={6} style={{ padding: 48, textAlign: 'center', color: 'var(--text-muted)' }}>Nenhuma chave criada ainda.</td></tr>
             ) : keys.map(k => (
-              <tr key={k.id} style={{ borderBottom: '1px solid var(--border)' }}>
+              <tr key={k.id} style={{ borderBottom: '1px solid #e5e5e5' }}>
                 <td style={{ padding: '12px 16px', fontWeight: 500 }}>{k.name}</td>
                 <td style={{ padding: '12px 16px', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--text-muted)' }}>{k.key_prefix || '—'}</td>
                 <td style={{ padding: '12px 16px' }}>
@@ -182,7 +182,7 @@ function ApiKeysTab() {
       {showModal && (
         <>
           <div onClick={() => { setShowModal(false); setNewKey(null); setName(''); setDesc('') }} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 40 }} />
-          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: 32, width: 480, zIndex: 50 }}>
+          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 16, padding: 32, width: 480, zIndex: 50 }}>
             <h3 style={{ margin: '0 0 20px', fontSize: 16, fontWeight: 700 }}>Nova API Key</h3>
             {newKey ? (
               <>
@@ -194,18 +194,18 @@ function ApiKeysTab() {
                   </div>
                 </div>
                 <button onClick={() => { setShowModal(false); setNewKey(null); setName(''); setDesc('') }}
-                  style={{ width: '100%', padding: '10px', borderRadius: 8, background: 'var(--surface2)', border: '1px solid var(--border)', cursor: 'pointer', fontWeight: 500 }}>
+                  style={{ width: '100%', padding: '10px', borderRadius: 8, background: 'var(--surface2)', border: '1px solid #e5e5e5', cursor: 'pointer', fontWeight: 500 }}>
                   Fechar
                 </button>
               </>
             ) : (
               <>
                 <input placeholder="Nome da chave (ex: Produção)" value={name} onChange={e => setName(e.target.value)}
-                  style={{ width: '100%', marginBottom: 12, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', fontSize: 13, boxSizing: 'border-box' }} />
+                  style={{ width: '100%', marginBottom: 12, padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e5e5', background: 'var(--bg)', color: 'var(--text)', fontSize: 13, boxSizing: 'border-box' }} />
                 <input placeholder="Descrição (opcional)" value={desc} onChange={e => setDesc(e.target.value)}
-                  style={{ width: '100%', marginBottom: 20, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', fontSize: 13, boxSizing: 'border-box' }} />
+                  style={{ width: '100%', marginBottom: 20, padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e5e5', background: 'var(--bg)', color: 'var(--text)', fontSize: 13, boxSizing: 'border-box' }} />
                 <div style={{ display: 'flex', gap: 12 }}>
-                  <button onClick={() => setShowModal(false)} style={{ flex: 1, padding: '10px', borderRadius: 8, background: 'var(--surface2)', border: '1px solid var(--border)', cursor: 'pointer' }}>Cancelar</button>
+                  <button onClick={() => setShowModal(false)} style={{ flex: 1, padding: '10px', borderRadius: 8, background: 'var(--surface2)', border: '1px solid #e5e5e5', cursor: 'pointer' }}>Cancelar</button>
                   <button onClick={createKey} disabled={creating || !name.trim()}
                     style={{ flex: 1, padding: '10px', borderRadius: 8, background: 'var(--accent)', color: '#000', fontWeight: 600, border: 'none', cursor: 'pointer', opacity: creating ? 0.6 : 1 }}>
                     {creating ? 'Criando...' : 'Criar chave'}
@@ -269,10 +269,10 @@ function WebhooksTab() {
         </button>
       </div>
 
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', marginBottom: 24 }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', overflow: 'hidden', marginBottom: 24 }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
-            <tr style={{ borderBottom: '1px solid var(--border)' }}>
+            <tr style={{ borderBottom: '1px solid #e5e5e5' }}>
               {['Nome', 'URL', 'Eventos', 'Status', 'Última entrega', 'Falhas'].map(h => (
                 <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', fontWeight: 500 }}>{h}</th>
               ))}
@@ -284,7 +284,7 @@ function WebhooksTab() {
             ) : webhooks.length === 0 ? (
               <tr><td colSpan={6} style={{ padding: 48, textAlign: 'center', color: 'var(--text-muted)' }}>Nenhum webhook configurado.</td></tr>
             ) : webhooks.map(wh => (
-              <tr key={wh.id} style={{ borderBottom: '1px solid var(--border)' }}>
+              <tr key={wh.id} style={{ borderBottom: '1px solid #e5e5e5' }}>
                 <td style={{ padding: '12px 16px', fontWeight: 500 }}>{wh.name}</td>
                 <td style={{ padding: '12px 16px', fontSize: 12, color: 'var(--text-muted)', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{wh.url}</td>
                 <td style={{ padding: '12px 16px' }}>
@@ -308,7 +308,7 @@ function WebhooksTab() {
       </div>
 
       {/* Instrução assinatura */}
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 20, fontSize: 13, color: 'var(--text-muted)' }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', padding: 20, fontSize: 13, color: 'var(--text-muted)' }}>
         <div style={{ fontWeight: 600, color: 'var(--text)', marginBottom: 8 }}>Verificação de assinatura</div>
         Verifique o header <code style={{ fontFamily: 'var(--font-mono)', background: 'var(--surface2)', padding: '1px 6px', borderRadius: 4 }}>X-Aexum-Signature</code> em cada entrega usando HMAC-SHA256 com o seu webhook secret.
       </div>
@@ -317,7 +317,7 @@ function WebhooksTab() {
       {showModal && (
         <>
           <div onClick={() => { setShowModal(false); setNewSecret(null); setName(''); setUrl('') }} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 40 }} />
-          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: 32, width: 480, zIndex: 50 }}>
+          <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 16, padding: 32, width: 480, zIndex: 50 }}>
             <h3 style={{ margin: '0 0 20px', fontSize: 16, fontWeight: 700 }}>Novo Webhook</h3>
             {newSecret ? (
               <>
@@ -329,16 +329,16 @@ function WebhooksTab() {
                   </div>
                 </div>
                 <button onClick={() => { setShowModal(false); setNewSecret(null); setName(''); setUrl('') }}
-                  style={{ width: '100%', padding: 10, borderRadius: 8, background: 'var(--surface2)', border: '1px solid var(--border)', cursor: 'pointer', fontWeight: 500 }}>
+                  style={{ width: '100%', padding: 10, borderRadius: 8, background: 'var(--surface2)', border: '1px solid #e5e5e5', cursor: 'pointer', fontWeight: 500 }}>
                   Fechar
                 </button>
               </>
             ) : (
               <>
                 <input placeholder="Nome (ex: Notificação de handoff)" value={name} onChange={e => setName(e.target.value)}
-                  style={{ width: '100%', marginBottom: 12, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', fontSize: 13, boxSizing: 'border-box' }} />
+                  style={{ width: '100%', marginBottom: 12, padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e5e5', background: 'var(--bg)', color: 'var(--text)', fontSize: 13, boxSizing: 'border-box' }} />
                 <input placeholder="URL de destino (https://...)" value={url} onChange={e => setUrl(e.target.value)}
-                  style={{ width: '100%', marginBottom: 16, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', fontSize: 13, boxSizing: 'border-box' }} />
+                  style={{ width: '100%', marginBottom: 16, padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e5e5', background: 'var(--bg)', color: 'var(--text)', fontSize: 13, boxSizing: 'border-box' }} />
                 <div style={{ marginBottom: 20 }}>
                   <div style={{ fontSize: 12, fontWeight: 600, marginBottom: 8 }}>Eventos</div>
                   {['handoff', 'new_lead', 'message_received'].map(e => (
@@ -349,7 +349,7 @@ function WebhooksTab() {
                   ))}
                 </div>
                 <div style={{ display: 'flex', gap: 12 }}>
-                  <button onClick={() => setShowModal(false)} style={{ flex: 1, padding: 10, borderRadius: 8, background: 'var(--surface2)', border: '1px solid var(--border)', cursor: 'pointer' }}>Cancelar</button>
+                  <button onClick={() => setShowModal(false)} style={{ flex: 1, padding: 10, borderRadius: 8, background: 'var(--surface2)', border: '1px solid #e5e5e5', cursor: 'pointer' }}>Cancelar</button>
                   <button onClick={createWebhook} disabled={creating}
                     style={{ flex: 1, padding: 10, borderRadius: 8, background: 'var(--accent)', color: '#000', fontWeight: 600, border: 'none', cursor: 'pointer', opacity: creating ? 0.6 : 1 }}>
                     {creating ? 'Criando...' : 'Criar webhook'}
@@ -398,12 +398,12 @@ function PlaygroundTab() {
         ℹ️ Este playground usa a configuração atual do seu agente. Alterações nas configurações são refletidas imediatamente.
       </div>
       <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
-        <button onClick={() => setMessages([])} style={{ fontSize: 12, padding: '4px 12px', borderRadius: 6, border: '1px solid var(--border)', background: 'var(--surface2)', color: 'var(--text-muted)', cursor: 'pointer' }}>
+        <button onClick={() => setMessages([])} style={{ fontSize: 12, padding: '4px 12px', borderRadius: 6, border: '1px solid #e5e5e5', background: 'var(--surface2)', color: 'var(--text-muted)', cursor: 'pointer' }}>
           Limpar conversa
         </button>
       </div>
 
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, height: 420, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', height: 420, display: 'flex', flexDirection: 'column' }}>
         <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
           {messages.length === 0 && (
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: 13 }}>
@@ -433,13 +433,13 @@ function PlaygroundTab() {
           )}
           <div ref={bottomRef} />
         </div>
-        <div style={{ borderTop: '1px solid var(--border)', padding: '12px 16px', display: 'flex', gap: 10 }}>
+        <div style={{ borderTop: '1px solid #e5e5e5', padding: '12px 16px', display: 'flex', gap: 10 }}>
           <input
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && send()}
             placeholder="Digite uma mensagem..."
-            style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', fontSize: 13 }}
+            style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e5e5', background: 'var(--bg)', color: 'var(--text)', fontSize: 13 }}
           />
           <button onClick={send} disabled={sending || !input.trim()}
             style={{ padding: '8px 20px', borderRadius: 8, background: 'var(--accent)', color: '#000', fontWeight: 600, fontSize: 13, border: 'none', cursor: 'pointer', opacity: sending ? 0.6 : 1 }}>
@@ -480,7 +480,7 @@ function LogsTab() {
             { label: 'Total de tokens', value: summary.totalTokens.toLocaleString('pt-BR') },
             { label: 'Latência média', value: `${summary.avgLatency}ms` },
           ].map(c => (
-            <div key={c.label} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '16px 20px' }}>
+            <div key={c.label} style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', padding: '16px 20px' }}>
               <div style={{ fontSize: 24, fontWeight: 800, fontFamily: 'var(--font-display)' }}>{c.value}</div>
               <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 4 }}>{c.label}</div>
             </div>
@@ -491,20 +491,20 @@ function LogsTab() {
       {/* Filtro + refresh */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <select value={days} onChange={e => setDays(Number(e.target.value))}
-          style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface)', color: 'var(--text)', fontSize: 13, cursor: 'pointer' }}>
+          style={{ padding: '6px 12px', borderRadius: 8, border: '1px solid #e5e5e5', background: 'var(--surface)', color: 'var(--text)', fontSize: 13, cursor: 'pointer' }}>
           <option value={7}>Últimos 7 dias</option>
           <option value={14}>Últimos 14 dias</option>
           <option value={30}>Últimos 30 dias</option>
         </select>
-        <button onClick={load} style={{ padding: '6px 16px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--surface2)', color: 'var(--text)', fontSize: 13, cursor: 'pointer' }}>
+        <button onClick={load} style={{ padding: '6px 16px', borderRadius: 8, border: '1px solid #e5e5e5', background: 'var(--surface2)', color: 'var(--text)', fontSize: 13, cursor: 'pointer' }}>
           Atualizar
         </button>
       </div>
 
-      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
+      <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
           <thead>
-            <tr style={{ borderBottom: '1px solid var(--border)' }}>
+            <tr style={{ borderBottom: '1px solid #e5e5e5' }}>
               {['Horário', 'Endpoint', 'Método', 'Status', 'Tokens', 'Latência'].map(h => (
                 <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', fontWeight: 500 }}>{h}</th>
               ))}
@@ -516,7 +516,7 @@ function LogsTab() {
             ) : logs.length === 0 ? (
               <tr><td colSpan={6} style={{ padding: 48, textAlign: 'center', color: 'var(--text-muted)' }}>Nenhum log ainda.</td></tr>
             ) : logs.map(l => (
-              <tr key={l.id} style={{ borderBottom: '1px solid var(--border)' }}>
+              <tr key={l.id} style={{ borderBottom: '1px solid #e5e5e5' }}>
                 <td style={{ padding: '10px 16px', fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>{formatDate(l.created_at)}</td>
                 <td style={{ padding: '10px 16px', fontFamily: 'var(--font-mono)', fontSize: 12 }}>{l.endpoint}</td>
                 <td style={{ padding: '10px 16px', fontFamily: 'var(--font-mono)', fontSize: 12 }}>{l.method}</td>
@@ -578,7 +578,7 @@ function verifySignature(payload, signature, secret) {
 
   const section = (title: string, children: React.ReactNode) => (
     <div style={{ marginBottom: 40 }}>
-      <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, paddingBottom: 8, borderBottom: '1px solid var(--border)' }}>{title}</h3>
+      <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 16, paddingBottom: 8, borderBottom: '1px solid #e5e5e5' }}>{title}</h3>
       {children}
     </div>
   )
@@ -600,7 +600,7 @@ function verifySignature(payload, signature, secret) {
           <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
             {(['curl', 'js', 'python'] as const).map(l => (
               <button key={l} onClick={() => setCodeLang(l)}
-                style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid var(--border)', background: codeLang === l ? 'var(--accent)' : 'var(--surface2)', color: codeLang === l ? '#000' : 'var(--text)', fontSize: 12, cursor: 'pointer', fontWeight: codeLang === l ? 600 : 400 }}>
+                style={{ padding: '4px 12px', borderRadius: 6, border: '1px solid #e5e5e5', background: codeLang === l ? 'var(--accent)' : 'var(--surface2)', color: codeLang === l ? '#000' : 'var(--text)', fontSize: 12, cursor: 'pointer', fontWeight: codeLang === l ? 600 : 400 }}>
                 {l === 'curl' ? 'cURL' : l === 'js' ? 'JavaScript' : 'Python'}
               </button>
             ))}
@@ -610,10 +610,10 @@ function verifySignature(payload, signature, secret) {
       ))}
 
       {section('Eventos de Webhook', (
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', overflow: 'hidden' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+              <tr style={{ borderBottom: '1px solid #e5e5e5' }}>
                 {['Evento', 'Quando dispara', 'Payload'].map(h => (
                   <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', fontWeight: 500 }}>{h}</th>
                 ))}
@@ -625,7 +625,7 @@ function verifySignature(payload, signature, secret) {
                 { event: 'new_lead', when: 'Novo lead registrado no CRM', payload: '{"client_id":"...","name":"..."}' },
                 { event: 'message_received', when: 'A cada mensagem recebida', payload: '{"phone":"...","text":"..."}' },
               ].map(r => (
-                <tr key={r.event} style={{ borderBottom: '1px solid var(--border)' }}>
+                <tr key={r.event} style={{ borderBottom: '1px solid #e5e5e5' }}>
                   <td style={{ padding: '10px 16px', fontFamily: 'var(--font-mono)', fontSize: 12 }}>{r.event}</td>
                   <td style={{ padding: '10px 16px', fontSize: 12, color: 'var(--text-muted)' }}>{r.when}</td>
                   <td style={{ padding: '10px 16px', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)' }}>{r.payload}</td>
@@ -641,7 +641,7 @@ function verifySignature(payload, signature, secret) {
       ))}
 
       {section('Códigos de erro', (
-        <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
+        <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', overflow: 'hidden' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
             <tbody>
               {[
@@ -650,7 +650,7 @@ function verifySignature(payload, signature, secret) {
                 { code: '429', desc: 'Rate limit atingido (100 req/min)' },
                 { code: '500', desc: 'Erro interno — contato: suporte@aexum.com.br' },
               ].map(r => (
-                <tr key={r.code} style={{ borderBottom: '1px solid var(--border)' }}>
+                <tr key={r.code} style={{ borderBottom: '1px solid #e5e5e5' }}>
                   <td style={{ padding: '10px 16px', fontFamily: 'var(--font-mono)', fontSize: 12, color: '#ef4444', width: 60 }}>{r.code}</td>
                   <td style={{ padding: '10px 16px', fontSize: 13, color: 'var(--text-muted)' }}>{r.desc}</td>
                 </tr>
@@ -690,7 +690,7 @@ export default function DeveloperPage() {
           </div>
 
           {/* Tabs */}
-          <div style={{ display: 'flex', gap: 4, marginBottom: 32, borderBottom: '1px solid var(--border)', paddingBottom: 0 }}>
+          <div style={{ display: 'flex', gap: 4, marginBottom: 32, borderBottom: '1px solid #e5e5e5', paddingBottom: 0 }}>
             {tabs.map(t => (
               <button key={t.id} onClick={() => setTab(t.id)}
                 style={{

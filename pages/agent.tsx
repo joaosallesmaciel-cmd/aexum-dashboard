@@ -145,7 +145,7 @@ export default function AgentPage() {
               </span>
             </div>
             <Link href="/settings" style={{
-              padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border)',
+              padding: '8px 16px', borderRadius: 8, border: '1px solid #e5e5e5',
               fontSize: 13, color: 'var(--text-muted)', textDecoration: 'none',
               background: 'var(--surface)', fontWeight: 500,
             }}>
@@ -161,7 +161,7 @@ export default function AgentPage() {
               { label: 'Reuniões agendadas', value: loading ? '—' : converted },
             ].map(card => (
               <div key={card.label} style={{
-                background: 'var(--surface)', border: '1px solid var(--border)',
+                background: 'var(--surface)', border: '1px solid #e5e5e5',
                 borderRadius: 12, padding: '20px 24px',
               }}>
                 <div style={{ fontSize: 28, fontWeight: 800, fontFamily: 'var(--font-display)', color: 'var(--text)' }}>
@@ -173,7 +173,7 @@ export default function AgentPage() {
           </div>
 
           {/* Mensagens processadas */}
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '20px 24px', marginBottom: 40 }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', padding: '20px 24px', marginBottom: 40 }}>
             <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--text)', marginBottom: 16 }}>Mensagens processadas</div>
             <div>
               <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginBottom: 4 }}>TOTAL PROCESSADO</div>
@@ -189,10 +189,10 @@ export default function AgentPage() {
           {error ? (
             <div style={{ padding: 24, color: '#f87171', fontSize: 13 }}>{error}</div>
           ) : (
-            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
+            <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', overflow: 'hidden' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  <tr style={{ borderBottom: '1px solid #e5e5e5' }}>
                     {['Nome / Número', 'Stage', 'Última mensagem', 'Data'].map(h => (
                       <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', fontWeight: 500 }}>{h}</th>
                     ))}
@@ -212,7 +212,7 @@ export default function AgentPage() {
                     <tr
                       key={s.id}
                       onClick={() => openSession(s)}
-                      style={{ borderBottom: '1px solid var(--border)', cursor: 'pointer', transition: 'background 0.1s' }}
+                      style={{ borderBottom: '1px solid #e5e5e5', cursor: 'pointer', transition: 'background 0.1s' }}
                       onMouseEnter={e => (e.currentTarget.style.background = 'var(--surface2)')}
                       onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
                     >
@@ -245,11 +245,11 @@ export default function AgentPage() {
           />
           <div style={{
             position: 'fixed', top: 0, right: 0, bottom: 0, width: 420,
-            background: 'var(--surface)', borderLeft: '1px solid var(--border)',
+            background: 'var(--surface)', borderLeft: '1px solid #e5e5e5',
             display: 'flex', flexDirection: 'column', zIndex: 50,
           }}>
             {/* Drawer header */}
-            <div style={{ padding: '20px 24px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ padding: '20px 24px', borderBottom: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 15 }}>{selected.whatsapp_name || selected.whatsapp_number}</div>
                 <div style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)', marginTop: 2 }}>{selected.whatsapp_number}</div>
@@ -258,7 +258,7 @@ export default function AgentPage() {
             </div>
 
             {/* Stage + CRM link */}
-            <div style={{ padding: '12px 24px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{ padding: '12px 24px', borderBottom: '1px solid #e5e5e5', display: 'flex', alignItems: 'center', gap: 12 }}>
               <StageBadge stage={selected.stage} />
               {selected.client_id && (
                 <Link href="/crm" style={{ fontSize: 12, color: 'var(--accent)', marginLeft: 'auto' }}>Ver no CRM →</Link>

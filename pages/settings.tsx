@@ -24,7 +24,7 @@ const DAYS = [
 
 const inputStyle: React.CSSProperties = {
   width: '100%', padding: '10px 12px', borderRadius: 8, fontSize: 13,
-  background: 'var(--surface2)', border: '1px solid var(--border)',
+  background: 'var(--surface2)', border: '1px solid #e5e5e5',
   color: 'var(--text)', fontFamily: 'var(--font-body)',
   outline: 'none', boxSizing: 'border-box',
 }
@@ -215,7 +215,7 @@ export default function Settings() {
               disabled={togglingActive}
               style={{
                 display: 'flex', alignItems: 'center', gap: 8,
-                padding: '8px 16px', borderRadius: 8, border: '1px solid var(--border)',
+                padding: '8px 16px', borderRadius: 8, border: '1px solid #e5e5e5',
                 background: form.is_active ? 'rgba(141,198,63,0.1)' : 'var(--surface2)',
                 color: form.is_active ? '#c5eb2d' : 'var(--text-muted)',
                 cursor: togglingActive ? 'wait' : 'pointer', fontSize: 13, fontWeight: 500,
@@ -231,7 +231,7 @@ export default function Settings() {
           </div>
 
           {/* Tabs */}
-          <div style={{ display: 'flex', gap: 4, marginBottom: 32, borderBottom: '1px solid var(--border)', paddingBottom: 0 }}>
+          <div style={{ display: 'flex', gap: 4, marginBottom: 32, borderBottom: '1px solid #e5e5e5', paddingBottom: 0 }}>
             {tabs.map(t => (
               <button
                 key={t.key}
@@ -376,7 +376,7 @@ export default function Settings() {
                       </button>
                     </div>
                     {generatedKey && (
-                      <div style={{ marginBottom: 12, padding: 12, borderRadius: 8, background: 'var(--bg)', border: '1px solid var(--border)' }}>
+                      <div style={{ marginBottom: 12, padding: 12, borderRadius: 8, background: 'var(--bg)', border: '1px solid #e5e5e5' }}>
                         <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8 }}>
                           <input
                             readOnly
@@ -386,7 +386,7 @@ export default function Settings() {
                           <button
                             onClick={() => copyText(generatedKey, setKeyCopied)}
                             style={{
-                              padding: '10px 14px', borderRadius: 8, border: '1px solid var(--border)',
+                              padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e5e5',
                               background: keyCopied ? 'rgba(141,198,63,0.1)' : 'var(--surface2)',
                               color: keyCopied ? '#c5eb2d' : 'var(--text-muted)',
                               cursor: 'pointer', fontSize: 12, whiteSpace: 'nowrap',
@@ -401,7 +401,7 @@ export default function Settings() {
                       </div>
                     )}
                     {apiKeys.length > 0 && (
-                      <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden' }}>
+                      <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 8, overflow: 'hidden', boxShadow: 'var(--card-shadow)' }}>
                         {apiKeys.map((k, i) => (
                           <div key={k.id} style={{
                             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -437,7 +437,7 @@ export default function Settings() {
                       <button
                         onClick={() => copyText(WEBHOOK_URL, setWebhookCopied)}
                         style={{
-                          padding: '10px 14px', borderRadius: 8, border: '1px solid var(--border)',
+                          padding: '10px 14px', borderRadius: 8, border: '1px solid #e5e5e5',
                           background: webhookCopied ? 'rgba(141,198,63,0.1)' : 'var(--surface2)',
                           color: webhookCopied ? '#c5eb2d' : 'var(--text-muted)',
                           cursor: 'pointer', fontSize: 12, whiteSpace: 'nowrap',
@@ -502,7 +502,7 @@ export default function Settings() {
                       <button
                         onClick={() => copyText(WEBHOOK_URL, setWebhookCopied)}
                         style={{
-                          padding: '10px 16px', borderRadius: 8, border: '1px solid var(--border)',
+                          padding: '10px 16px', borderRadius: 8, border: '1px solid #e5e5e5',
                           background: webhookCopied ? 'rgba(141,198,63,0.1)' : 'var(--surface2)',
                           color: webhookCopied ? '#c5eb2d' : 'var(--text-muted)',
                           cursor: 'pointer', fontSize: 12, whiteSpace: 'nowrap',
@@ -543,7 +543,7 @@ export default function Settings() {
 
                   {/* Generated key display */}
                   {generatedKey && (
-                    <div style={{ marginBottom: 24, padding: 16, borderRadius: 10, background: 'var(--bg)', border: '1px solid var(--border)' }}>
+                    <div style={{ marginBottom: 24, padding: 16, borderRadius: 10, background: 'var(--bg)', border: '1px solid #e5e5e5' }}>
                       <div style={{ padding: '8px 12px', borderRadius: 6, background: '#000000', marginBottom: 10 }}>
                         <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: '#c5eb2d', wordBreak: 'break-all', letterSpacing: '0.04em' }}>
                           {generatedKey}
@@ -570,7 +570,7 @@ export default function Settings() {
 
                   {/* Keys list */}
                   {apiKeys.length > 0 && (
-                    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 10, overflow: 'hidden' }}>
+                    <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 10, overflow: 'hidden', boxShadow: 'var(--card-shadow)' }}>
                       {apiKeys.map((k, i) => (
                         <div key={k.id} style={{
                           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -604,7 +604,7 @@ export default function Settings() {
 
               {/* Save button — hidden on API tab */}
               {tab !== 'api' && (
-                <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid var(--border)' }}>
+                <div style={{ marginTop: 32, paddingTop: 24, borderTop: '1px solid #e5e5e5' }}>
                   <button
                     onClick={save}
                     disabled={saving}

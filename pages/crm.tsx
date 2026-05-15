@@ -89,14 +89,14 @@ function Field({ label, value, onChange, placeholder, type = 'text', span2 = fal
     <div style={span2 ? { gridColumn: '1 / -1' } : {}}>
       <label style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>{label}</label>
       <input type={type} value={value || ''} onChange={e => onChange(e.target.value)} placeholder={placeholder}
-        style={{ width: '100%', background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 7, padding: '8px 10px', fontSize: 13, color: 'var(--text)', fontFamily: 'var(--font-body)', boxSizing: 'border-box', outline: 'none' }} />
+        style={{ width: '100%', background: 'var(--surface2)', border: '1px solid #e5e5e5', borderRadius: 7, padding: '8px 10px', fontSize: 13, color: 'var(--text)', fontFamily: 'var(--font-body)', boxSizing: 'border-box', outline: 'none' }} />
     </div>
   )
 }
 
 function SkeletonTable() {
   return (
-    <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
+    <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', overflow: 'hidden' }}>
       {[...Array(5)].map((_, i) => (
         <div key={i} style={{ padding: '14px 16px', borderTop: i > 0 ? '1px solid var(--border)' : undefined, display: 'flex', gap: 16 }}>
           {[200, 60, 100, 80, 80, 70].map((w, j) => (
@@ -110,7 +110,7 @@ function SkeletonTable() {
 
 function EmptyState({ onNew }: { onNew: () => void }) {
   return (
-    <div style={{ textAlign: 'center', padding: '64px 24px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12 }}>
+    <div style={{ textAlign: 'center', padding: '64px 24px', background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)' }}>
       <div style={{ fontSize: 32, marginBottom: 12 }}>👥</div>
       <div style={{ fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 700, marginBottom: 6 }}>Nenhum cliente ainda</div>
       <p style={{ color: 'var(--text-muted)', fontSize: 13, marginBottom: 20 }}>Adicione seu primeiro cliente para começar a gerenciar o funil.</p>
@@ -322,7 +322,7 @@ export default function CRM() {
 
   // ── Input style helper ───────────────────────────────────────────────────
   const selectStyle: React.CSSProperties = {
-    width: '100%', background: 'var(--surface2)', border: '1px solid var(--border)',
+    width: '100%', background: 'var(--surface2)', border: '1px solid #e5e5e5',
     borderRadius: 7, padding: '8px 10px', fontSize: 13, color: 'var(--text)',
     fontFamily: 'var(--font-body)',
   }
@@ -339,7 +339,7 @@ export default function CRM() {
           {/* ── Welcome block ── */}
           <div style={{ marginBottom: 36 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 12,
-              padding: '4px 12px', borderRadius: 20, border: '1px solid rgba(197,235,45,0.3)',
+              padding: '4px 12px', borderRadius: 20, border: '1px solid #e5e5e5',
               background: 'rgba(197,235,45,0.06)', fontSize: 11, fontFamily: 'var(--font-mono)', color: '#c5eb2d' }}>
               <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#c5eb2d',
                 boxShadow: '0 0 0 0 rgba(197,235,45,0.5)',
@@ -366,7 +366,7 @@ export default function CRM() {
               </p>
             </div>
             <div style={{ display: 'flex', gap: 10 }}>
-              <div style={{ display: 'flex', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden' }}>
+              <div style={{ display: 'flex', background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 8, overflow: 'hidden' }}>
                 {(['lista', 'kanban'] as const).map(v => (
                   <button key={v} onClick={() => setView(v)} style={{
                     padding: '7px 16px', fontSize: 12, fontFamily: 'var(--font-mono)',
@@ -397,7 +397,7 @@ export default function CRM() {
                 <input
                   placeholder="Buscar por nome..."
                   value={search} onChange={e => setSearch(e.target.value)}
-                  style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 14px', fontSize: 13, color: 'var(--text)', fontFamily: 'var(--font-body)', width: 220, outline: 'none' }}
+                  style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 8, padding: '8px 14px', fontSize: 13, color: 'var(--text)', fontFamily: 'var(--font-body)', width: 220, outline: 'none' }}
                 />
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                   {(['all', ...STAGE_ORDER] as const).map(s => {
@@ -418,10 +418,10 @@ export default function CRM() {
               </div>
 
               {loading ? <SkeletonTable /> : filtered.length === 0 ? <EmptyState onNew={() => setModalOpen(true)} /> : (
-                <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>
+                <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', overflow: 'hidden' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                     <thead>
-                      <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                      <tr style={{ borderBottom: '1px solid #e5e5e5' }}>
                         {['Nome', 'Tipo', 'Segmento', 'Stage', 'Valor', 'Data'].map(h => (
                           <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--text-muted)', fontWeight: 500, letterSpacing: '0.06em' }}>{h.toUpperCase()}</th>
                         ))}
@@ -436,7 +436,7 @@ export default function CRM() {
                         >
                           <td style={{ padding: '12px 16px', fontWeight: 500 }}>{c.name}</td>
                           <td style={{ padding: '12px 16px' }}>
-                            <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', padding: '2px 6px', borderRadius: 4, background: 'var(--surface2)', border: '1px solid var(--border)' }}>{c.type.toUpperCase()}</span>
+                            <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', padding: '2px 6px', borderRadius: 4, background: 'var(--surface2)', border: '1px solid #e5e5e5' }}>{c.type.toUpperCase()}</span>
                           </td>
                           <td style={{ padding: '12px 16px', color: 'var(--text-muted)' }}>{c.segment || '—'}</td>
                           <td style={{ padding: '12px 16px' }}><StageBadge stage={c.stage} /></td>
@@ -456,7 +456,7 @@ export default function CRM() {
             <>
               <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
                 <button onClick={() => setShowClosed(v => !v)} style={{
-                  background: 'none', border: '1px solid var(--border)', borderRadius: 6,
+                  background: 'none', border: '1px solid #e5e5e5', borderRadius: 6,
                   padding: '6px 12px', fontSize: 12, color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'var(--font-mono)',
                 }}>
                   {showClosed ? '◀ Ocultar Fechado/Perdido' : '▶ Mostrar Fechado/Perdido'}
@@ -471,7 +471,7 @@ export default function CRM() {
                       <div style={{
                         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                         padding: '10px 12px', background: 'var(--surface)',
-                        border: '1px solid var(--border)', borderBottom: 'none', borderRadius: '8px 8px 0 0',
+                        border: '1px solid #e5e5e5', borderBottom: 'none', borderRadius: '8px 8px 0 0',
                       }}
                       >
                         <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
@@ -505,7 +505,7 @@ export default function CRM() {
                               onDragEnd={() => setDragClientId(null)}
                               onClick={() => openDrawer(c)}
                               style={{
-                                background: 'var(--surface)', border: '1px solid var(--border)',
+                                background: 'var(--surface)', border: '1px solid #e5e5e5',
                                 borderRadius: 8, padding: '10px 12px',
                                 cursor: 'grab', opacity: dragClientId === c.id ? 0.5 : 1,
                                 transition: 'opacity 0.15s',
@@ -518,11 +518,11 @@ export default function CRM() {
                               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                                 <div style={{ display: 'flex', gap: 4, alignItems: 'center', flexWrap: 'wrap' }}>
                                   {c.contract_value ? <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: '#c5eb2d' }}>{fmt(c.contract_value)}</span> : null}
-                                  {c.origin ? <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 4, background: 'var(--surface2)', border: '1px solid var(--border)', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{ORIGIN_LABELS[c.origin] || c.origin}</span> : null}
+                                  {c.origin ? <span style={{ fontSize: 10, padding: '1px 6px', borderRadius: 4, background: 'var(--surface2)', border: '1px solid #e5e5e5', color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{ORIGIN_LABELS[c.origin] || c.origin}</span> : null}
                                 </div>
                                 {hasNext && (
                                   <button onClick={e => { e.stopPropagation(); moveToNext(c) }}
-                                    style={{ background: 'none', border: '1px solid var(--border)', borderRadius: 4, padding: '2px 7px', fontSize: 11, color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'var(--font-mono)' }}
+                                    style={{ background: 'none', border: '1px solid #e5e5e5', borderRadius: 4, padding: '2px 7px', fontSize: 11, color: 'var(--text-muted)', cursor: 'pointer', fontFamily: 'var(--font-mono)' }}
                                     title={`→ ${STAGE_LABELS[STAGE_ORDER[nextIdx]]}`}>→</button>
                                 )}
                               </div>
@@ -542,7 +542,7 @@ export default function CRM() {
         {modalOpen && (
           <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100, padding: 24 }}
             onClick={e => { if (e.target === e.currentTarget) { setModalOpen(false); setForm({ ...EMPTY_FORM }) } }}>
-            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 14, width: '100%', maxWidth: 560, maxHeight: '90vh', overflowY: 'auto', padding: 32 }}>
+            <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 14, width: '100%', maxWidth: 560, maxHeight: '90vh', overflowY: 'auto', padding: 32 }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
                 <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 800, margin: 0 }}>Novo Cliente</h2>
                 <button onClick={() => { setModalOpen(false); setForm({ ...EMPTY_FORM }) }} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: 22 }}>×</button>
@@ -551,7 +551,7 @@ export default function CRM() {
               {/* Type toggle */}
               <div style={{ marginBottom: 20 }}>
                 <label style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>TIPO</label>
-                <div style={{ display: 'flex', background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 8, overflow: 'hidden', width: 'fit-content' }}>
+                <div style={{ display: 'flex', background: 'var(--surface2)', border: '1px solid #e5e5e5', borderRadius: 8, overflow: 'hidden', width: 'fit-content' }}>
                   {(['pf', 'pj'] as const).map(t => (
                     <button key={t} onClick={() => setForm(f => ({ ...f, type: t }))} style={{
                       padding: '6px 20px', fontSize: 12, fontFamily: 'var(--font-mono)', border: 'none', cursor: 'pointer',
@@ -593,12 +593,12 @@ export default function CRM() {
               <div style={{ marginBottom: 24 }}>
                 <label style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.06em', display: 'block', marginBottom: 6 }}>NOTAS</label>
                 <textarea value={form.notes} onChange={e => setForm(f => ({ ...f, notes: e.target.value }))} rows={3} placeholder="Observações..."
-                  style={{ width: '100%', background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 7, padding: '8px 10px', fontSize: 13, color: 'var(--text)', fontFamily: 'var(--font-body)', resize: 'vertical', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', background: 'var(--surface2)', border: '1px solid #e5e5e5', borderRadius: 7, padding: '8px 10px', fontSize: 13, color: 'var(--text)', fontFamily: 'var(--font-body)', resize: 'vertical', boxSizing: 'border-box' }} />
               </div>
 
               <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
                 <button onClick={() => { setModalOpen(false); setForm({ ...EMPTY_FORM }) }}
-                  style={{ background: 'none', border: '1px solid var(--border)', borderRadius: 8, padding: '9px 20px', fontSize: 13, color: 'var(--text-muted)', cursor: 'pointer' }}>
+                  style={{ background: 'none', border: '1px solid #e5e5e5', borderRadius: 8, padding: '9px 20px', fontSize: 13, color: 'var(--text-muted)', cursor: 'pointer' }}>
                   Cancelar
                 </button>
                 <button onClick={handleCreate} disabled={saving || !form.name.trim()} style={{
@@ -620,16 +620,16 @@ export default function CRM() {
             <div onClick={closeDrawer} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 90 }} />
             <aside style={{
               position: 'fixed', right: 0, top: 0, bottom: 0, width: 420,
-              background: 'var(--surface)', borderLeft: '1px solid var(--border)',
+              background: 'var(--surface)', borderLeft: '1px solid #e5e5e5',
               zIndex: 91, overflowY: 'auto', display: 'flex', flexDirection: 'column',
             }}>
               {/* Header */}
-              <div style={{ padding: '24px 24px 20px', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+              <div style={{ padding: '24px 24px 20px', borderBottom: '1px solid #e5e5e5', display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                 <div>
                   <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 18, fontWeight: 800, margin: '0 0 6px', letterSpacing: '-0.02em' }}>{selectedClient.name}</h2>
                   <div style={{ display: 'flex', gap: 6 }}>
                     <StageBadge stage={selectedClient.stage} />
-                    <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', padding: '2px 6px', background: 'var(--surface2)', borderRadius: 4, border: '1px solid var(--border)' }}>
+                    <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', padding: '2px 6px', background: 'var(--surface2)', borderRadius: 4, border: '1px solid #e5e5e5' }}>
                       {selectedClient.type.toUpperCase()}
                     </span>
                   </div>
@@ -669,7 +669,7 @@ export default function CRM() {
                     onChange={e => setNoteText(e.target.value)}
                     rows={4}
                     placeholder="Observações sobre este cliente..."
-                    style={{ width: '100%', background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 12px', fontSize: 13, color: 'var(--text)', fontFamily: 'var(--font-body)', resize: 'vertical', boxSizing: 'border-box', marginBottom: 8 }}
+                    style={{ width: '100%', background: 'var(--surface2)', border: '1px solid #e5e5e5', borderRadius: 8, padding: '10px 12px', fontSize: 13, color: 'var(--text)', fontFamily: 'var(--font-body)', resize: 'vertical', boxSizing: 'border-box', marginBottom: 8 }}
                   />
                   <button onClick={saveNote} style={{
                     background: noteSaved ? 'rgba(197,235,45,0.15)' : '#c5eb2d',
@@ -701,7 +701,7 @@ export default function CRM() {
                           const isAi = m.type === 'ai'
                           const rawContent = typeof m.content === 'string' ? m.content : ''
                           return (
-                            <div key={m.id} style={{ background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 8, padding: '8px 12px' }}>
+                            <div key={m.id} style={{ background: 'var(--surface2)', border: '1px solid #e5e5e5', borderRadius: 8, padding: '8px 12px' }}>
                               <div style={{ fontSize: 10, fontFamily: 'var(--font-mono)', color: isAi ? '#c5eb2d' : 'var(--text-muted)', marginBottom: 3 }}>
                                 {isAi ? 'Bia' : 'Cliente'}
                               </div>
@@ -717,7 +717,7 @@ export default function CRM() {
                 )}
 
                 {/* Move stage */}
-                <section style={{ background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 10, padding: 16 }}>
+                <section style={{ background: 'var(--surface2)', border: '1px solid #e5e5e5', borderRadius: 10, padding: 16 }}>
                   <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: 10 }}>MOVER ETAPA</div>
                   <div style={{ display: 'flex', gap: 8 }}>
                     <select value={editStage} onChange={e => setEditStage(e.target.value as Stage)}
@@ -737,7 +737,7 @@ export default function CRM() {
                 <section>
                   <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', letterSpacing: '0.08em', marginBottom: 12 }}>INTERAÇÕES</div>
 
-                  <div style={{ background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 10, padding: 14, marginBottom: 14 }}>
+                  <div style={{ background: 'var(--surface2)', border: '1px solid #e5e5e5', borderRadius: 10, padding: 14, marginBottom: 14 }}>
                     <div style={{ marginBottom: 8 }}>
                       <select value={newInteraction.type} onChange={e => setNewInteraction(i => ({ ...i, type: e.target.value as InteractionType }))}
                         style={{ ...selectStyle, background: 'var(--surface)', width: 'auto', fontSize: 12 }}>
@@ -746,7 +746,7 @@ export default function CRM() {
                     </div>
                     <textarea value={newInteraction.content} onChange={e => setNewInteraction(i => ({ ...i, content: e.target.value }))}
                       placeholder="Descreva a interação..." rows={2}
-                      style={{ width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 6, padding: '7px 10px', fontSize: 13, color: 'var(--text)', fontFamily: 'var(--font-body)', resize: 'none', boxSizing: 'border-box', marginBottom: 8 }} />
+                      style={{ width: '100%', background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 6, padding: '7px 10px', fontSize: 13, color: 'var(--text)', fontFamily: 'var(--font-body)', resize: 'none', boxSizing: 'border-box', marginBottom: 8 }} />
                     <button onClick={handleAddInteraction} disabled={addingInteraction || !newInteraction.content.trim()} style={{
                       background: 'var(--accent)', color: '#000000', border: 'none',
                       borderRadius: 6, padding: '6px 14px', fontSize: 12, fontWeight: 700,
@@ -761,9 +761,9 @@ export default function CRM() {
                   ) : (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                       {interactions.map(i => (
-                        <div key={i.id} style={{ background: 'var(--surface2)', border: '1px solid var(--border)', borderRadius: 8, padding: '10px 14px' }}>
+                        <div key={i.id} style={{ background: 'var(--surface2)', border: '1px solid #e5e5e5', borderRadius: 8, padding: '10px 14px' }}>
                           <div style={{ display: 'flex', gap: 8, marginBottom: 6 }}>
-                            <span style={{ fontSize: 10, fontFamily: 'var(--font-mono)', padding: '2px 7px', borderRadius: 4, background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text-muted)' }}>
+                            <span style={{ fontSize: 10, fontFamily: 'var(--font-mono)', padding: '2px 7px', borderRadius: 4, background: 'var(--surface)', border: '1px solid #e5e5e5', color: 'var(--text-muted)' }}>
                               {INTERACTION_LABELS[i.type]}
                             </span>
                             <span style={{ fontSize: 11, color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}>{fmtDate(i.created_at)}</span>
@@ -776,7 +776,7 @@ export default function CRM() {
                 </section>
 
                 {/* Delete */}
-                <section style={{ paddingTop: 8, borderTop: '1px solid var(--border)' }}>
+                <section style={{ paddingTop: 8, borderTop: '1px solid #e5e5e5' }}>
                   <button onClick={handleDelete} disabled={deleting} style={{
                     background: 'none', border: '1px solid rgba(239,68,68,0.4)', borderRadius: 6,
                     padding: '5px 12px', fontSize: 11, color: 'rgba(239,68,68,0.7)',

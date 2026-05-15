@@ -175,7 +175,7 @@ export default function KnowledgePage() {
             </button>
             <button
               onClick={() => setShowManual(!showManual)}
-              style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--surface)', color: 'var(--text)', fontWeight: 500, fontSize: 13, border: '1px solid var(--border)', cursor: 'pointer' }}
+              style={{ padding: '8px 16px', borderRadius: 8, background: 'var(--surface)', color: 'var(--text)', fontWeight: 500, fontSize: 13, border: '1px solid #e5e5e5', cursor: 'pointer' }}
             >
               Adicionar texto
             </button>
@@ -185,19 +185,19 @@ export default function KnowledgePage() {
 
           {/* Manual input */}
           {showManual && (
-            <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 24, marginBottom: 24 }}>
+            <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', padding: 24, marginBottom: 24 }}>
               <input
                 placeholder="Nome do documento (ex: FAQ Preços)"
                 value={manualName}
                 onChange={e => setManualName(e.target.value)}
-                style={{ width: '100%', marginBottom: 12, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', fontSize: 13, boxSizing: 'border-box' }}
+                style={{ width: '100%', marginBottom: 12, padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e5e5', background: 'var(--bg)', color: 'var(--text)', fontSize: 13, boxSizing: 'border-box' }}
               />
               <textarea
                 placeholder="Cole aqui o texto, FAQ, cardápio, protocolo..."
                 value={manualText}
                 onChange={e => setManualText(e.target.value)}
                 rows={6}
-                style={{ width: '100%', marginBottom: 12, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', fontSize: 13, resize: 'vertical', boxSizing: 'border-box' }}
+                style={{ width: '100%', marginBottom: 12, padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e5e5', background: 'var(--bg)', color: 'var(--text)', fontSize: 13, resize: 'vertical', boxSizing: 'border-box' }}
               />
               <button onClick={handleManualAdd} disabled={uploading}
                 style={{ padding: '8px 20px', borderRadius: 8, background: 'var(--accent)', color: '#000', fontWeight: 600, fontSize: 13, border: 'none', cursor: 'pointer' }}>
@@ -208,7 +208,7 @@ export default function KnowledgePage() {
 
           {/* Docs list */}
           <div style={{ marginBottom: 8, fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>Documentos</div>
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden', marginBottom: 48 }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', overflow: 'hidden', marginBottom: 48 }}>
             {loading ? (
               <div style={{ padding: 32, color: 'var(--text-muted)', fontSize: 13 }}>Carregando...</div>
             ) : docs.length === 0 ? (
@@ -218,7 +218,7 @@ export default function KnowledgePage() {
             ) : (
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
                 <thead>
-                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  <tr style={{ borderBottom: '1px solid #e5e5e5' }}>
                     {['Nome', 'Tipo', 'Status', 'Chunks', 'Data', ''].map(h => (
                       <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)', fontWeight: 500 }}>{h}</th>
                     ))}
@@ -226,7 +226,7 @@ export default function KnowledgePage() {
                 </thead>
                 <tbody>
                   {docs.map(doc => (
-                    <tr key={doc.id} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <tr key={doc.id} style={{ borderBottom: '1px solid #e5e5e5' }}>
                       <td style={{ padding: '12px 16px', fontWeight: 500 }}>{doc.name}</td>
                       <td style={{ padding: '12px 16px' }}>
                         <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', background: 'var(--surface2)', padding: '2px 8px', borderRadius: 20 }}>
@@ -269,7 +269,7 @@ export default function KnowledgePage() {
 
           {/* Search test */}
           <div style={{ marginBottom: 8, fontSize: 13, fontWeight: 600, color: 'var(--text)' }}>Testar base de conhecimento</div>
-          <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 24 }}>
+          <div style={{ background: 'var(--surface)', border: '1px solid #e5e5e5', borderRadius: 12, boxShadow: 'var(--card-shadow)', padding: 24 }}>
             <p style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 0, marginBottom: 16 }}>Digite uma pergunta como seu cliente faria para ver quais trechos seriam injetados no agente.</p>
             <div style={{ display: 'flex', gap: 12, marginBottom: 20 }}>
               <input
@@ -277,17 +277,17 @@ export default function KnowledgePage() {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSearch()}
-                style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid var(--border)', background: 'var(--bg)', color: 'var(--text)', fontSize: 13 }}
+                style={{ flex: 1, padding: '8px 12px', borderRadius: 8, border: '1px solid #e5e5e5', background: 'var(--bg)', color: 'var(--text)', fontSize: 13 }}
               />
               <button onClick={handleSearch} disabled={searching}
-                style={{ padding: '8px 20px', borderRadius: 8, background: 'var(--surface2)', color: 'var(--text)', fontWeight: 500, fontSize: 13, border: '1px solid var(--border)', cursor: 'pointer' }}>
+                style={{ padding: '8px 20px', borderRadius: 8, background: 'var(--surface2)', color: 'var(--text)', fontWeight: 500, fontSize: 13, border: '1px solid #e5e5e5', cursor: 'pointer' }}>
                 {searching ? 'Buscando...' : 'Buscar'}
               </button>
             </div>
             {searchResults.length > 0 && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {searchResults.map((r, i) => (
-                  <div key={r.id} style={{ background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: 8, padding: 16 }}>
+                  <div key={r.id} style={{ background: 'var(--bg)', border: '1px solid #e5e5e5', borderRadius: 8, padding: 16 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                       <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: 'var(--text-muted)' }}>Trecho {i + 1} — {r.source_name}</span>
                       <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', color: '#22c55e', fontWeight: 600 }}>
