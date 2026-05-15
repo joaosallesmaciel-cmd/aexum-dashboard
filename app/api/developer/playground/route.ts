@@ -10,7 +10,7 @@ const supabaseAdmin = createClient(
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY! })
 
 export async function POST(req: NextRequest) {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const { createServerClient } = await import('@supabase/ssr')
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

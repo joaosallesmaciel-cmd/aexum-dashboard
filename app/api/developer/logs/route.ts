@@ -8,7 +8,7 @@ const supabaseAdmin = createClient(
 )
 
 export async function GET(req: NextRequest) {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const { createServerClient } = await import('@supabase/ssr')
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

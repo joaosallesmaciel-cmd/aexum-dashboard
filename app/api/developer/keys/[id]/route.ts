@@ -9,7 +9,7 @@ const supabaseAdmin = createClient(
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const { createServerClient } = await import('@supabase/ssr')
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
